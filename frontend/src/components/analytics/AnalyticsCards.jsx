@@ -59,7 +59,7 @@ function AnalyticsCards({ totalEmployees = 0, activeEmployees = 0, inactiveEmplo
             Inactive Employees
           </span>
           <div className="w-7 h-7 rounded-full bg-[#007acc] flex items-center justify-center">
-            <UserX className="w-4 h-4 text-white" />
+            <ArrowUpRight className="w-4 h-4 text-white" />
           </div>
         </div>
         <div className="flex justify-between items-baseline my-1">
