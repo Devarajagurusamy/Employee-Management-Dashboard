@@ -1,5 +1,6 @@
 import React from 'react';
 import { Edit3, Trash2, RotateCcw } from 'lucide-react';
+import Spinner from '../ui/Spinner';
 
 function EmployeeTable({
   employees,
@@ -13,8 +14,8 @@ function EmployeeTable({
 }) {
   if (loading) {
     return (
-      <div className="p-10 sm:p-14 text-center bg-white dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42] shadow-sm">
-        <p className="text-[#007acc] font-semibold">Loading employees...</p>
+      <div className="p-10 sm:p-14 text-center bg-white dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42] shadow-sm flex items-center justify-center">
+        <Spinner text="Loading employees..." />
       </div>
     );
   }

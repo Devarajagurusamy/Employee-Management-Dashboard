@@ -73,13 +73,22 @@ function DepartmentChart({ data = [] }) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: theme === 'light' ? '#FFFFFF' : '#252526',
+                backgroundColor: theme === 'light' ? '#FFFFFF' : '#1e1e1e',
                 borderColor: theme === 'light' ? '#E2E8F0' : '#3e3e42',
                 borderRadius: '12px',
-                color: theme === 'light' ? '#0F172A' : '#F8FAFC',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
               }}
-              cursor={{ fill: 'rgba(0, 122, 204, 0.05)' }}
+              itemStyle={{
+                color: theme === 'light' ? '#0F172A' : '#FFFFFF',
+                fontSize: '13px',
+                fontWeight: '600',
+              }}
+              labelStyle={{
+                color: theme === 'light' ? '#0F172A' : '#FFFFFF',
+                fontWeight: '700',
+                marginBottom: '2px',
+              }}
+              cursor={{ fill: 'rgba(0, 122, 204, 0.1)' }}
             />
             <Bar dataKey="count" name="Employees" radius={[6, 6, 0, 0]}>
               {data.map((entry, index) => (

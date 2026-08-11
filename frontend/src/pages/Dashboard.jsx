@@ -12,6 +12,7 @@ import AnalyticsCards from '../components/analytics/AnalyticsCards';
 import DepartmentChart from '../components/analytics/DepartmentChart';
 import MonthlyJoinedChart from '../components/analytics/MonthlyJoinedChart';
 import StatusDistributionChart from '../components/analytics/StatusDistributionChart';
+import Spinner from '../components/ui/Spinner';
 
 import AOS from 'aos';
 
@@ -275,8 +276,8 @@ function Dashboard() {
         {(activeTab === 'Dashboard' || activeTab === 'Analytics') && (
           <section className="mb-8">
             {analyticsLoading ? (
-              <div className="p-10 text-center bg-slate-50 dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42]">
-                <p className="text-[#007acc] font-semibold">Loading analytics metrics...</p>
+              <div className="p-10 text-center bg-slate-50 dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42] flex items-center justify-center">
+                <Spinner text="Loading analytics metrics..." />
               </div>
             ) : analyticsError ? (
               <div className="p-10 text-center bg-slate-50 dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42]">
