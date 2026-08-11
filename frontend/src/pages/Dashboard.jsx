@@ -5,6 +5,7 @@ import EmployeeTable from '../components/employees/EmployeeTable';
 import EmployeeForm from '../components/employees/EmployeeForm';
 import DeleteConfirmation from '../components/employees/DeleteConfirmation';
 import EmployeeFilters from '../components/employees/EmployeeFilters';
+import Pagination from '../components/employees/Pagination';
 
 function Dashboard() {
   const { user, logout } = useAuth();
@@ -17,6 +18,10 @@ function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All');
+
+  // Pagination States
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
 
   // Modal & Form States
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -52,6 +57,11 @@ function Dashboard() {
     fetchEmployeeList();
   }, []);
 
+  // Reset page to 1 whenever search term or filter selection changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedDepartment, selectedStatus]);
+
   // Derive unique available departments from current employee dataset or standard defaults
   const availableDepartments = useMemo(() => {
     const defaultDepts = ['Engineering', 'HR', 'Finance', 'Marketing', 'Sales', 'Operations'];
@@ -63,7 +73,7 @@ function Dashboard() {
     return combined.sort();
   }, [employees]);
 
-  // Derived filtered employees list
+  // Derived filtered employees list (Search + Department + Status)
   const filteredEmployees = useMemo(() => {
     return employees.filter((emp) => {
       // 1. Search term match (name or email, case-insensitive)
@@ -85,6 +95,22 @@ function Dashboard() {
     });
   }, [employees, searchTerm, selectedDepartment, selectedStatus]);
 
+  // Calculate total pages for current filtered dataset
+  const totalPages = Math.max(1, Math.ceil(filteredEmployees.length / pageSize));
+
+  // Boundary safety check: reset to last valid page if current page exceeds total pages (e.g. after deletion)
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  // Derived paginated employee subset for current page view
+  const paginatedEmployees = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredEmployees.slice(startIndex, startIndex + pageSize);
+  }, [filteredEmployees, currentPage, pageSize]);
+
   const hasActiveFilters =
     searchTerm.trim() !== '' ||
     selectedDepartment !== 'All' ||
@@ -94,6 +120,7 @@ function Dashboard() {
     setSearchTerm('');
     setSelectedDepartment('All');
     setSelectedStatus('All');
+    setCurrentPage(1);
   };
 
   // Form Handlers
@@ -142,6 +169,7 @@ function Dashboard() {
         if (res && res.success) {
           setEmployees((prev) => [res.data, ...prev]);
           setIsFormOpen(false);
+          setCurrentPage(1); // Jump to first page so newly created employee is immediately visible
         } else {
           setFormError(res?.message || 'Failed to create employee.');
         }
@@ -214,7 +242,7 @@ function Dashboard() {
         <div>
           <h3 style={styles.sectionTitle}>Employee Records</h3>
           <p style={styles.sectionSubtitle}>
-            Manage team members, search, filter, and view employee details
+            Manage team members, search, filter, and navigate employee records
           </p>
         </div>
         <button onClick={handleAddEmployee} style={styles.addBtn}>
@@ -238,7 +266,7 @@ function Dashboard() {
       {/* Main Table Component */}
       <main>
         <EmployeeTable
-          employees={filteredEmployees}
+          employees={paginatedEmployees}
           loading={loading}
           error={error}
           onEdit={handleEditEmployee}
@@ -247,6 +275,17 @@ function Dashboard() {
           isFiltered={hasActiveFilters}
           onClearFilters={handleClearFilters}
         />
+
+        {/* Pagination Controls */}
+        {!loading && !error && filteredEmployees.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredEmployees.length}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </main>
 
       {/* Reusable Employee Form Modal */}
