@@ -1,51 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
-import API from './services/api';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import ProtectedRoute from './routes/ProtectedRoute';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 
-function HealthCheck() {
-  const [status, setStatus] = useState('Checking backend connection...');
-  const [error, setError] = useState(null);
+function AppRoutes() {
+  const { isAuthenticated, loading } = useAuth();
 
-  useEffect(() => {
-    API.get('/health')
-      .then((res) => {
-        if (res.data && res.data.success) {
-          setStatus(res.data.message);
-        } else {
-          setStatus('Unexpected response structure');
-        }
-      })
-      .catch((err) => {
-        setError(err.message || 'Failed to connect to backend');
-      });
-  }, []);
+  if (loading) {
+    return (
+      <div style={{ padding: '3rem', textAlign: 'center' }}>
+        <h3>Loading application...</h3>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: '2rem', textAlign: 'left', background: '#1e1e1e', borderRadius: '8px' }}>
-      <h2>Phase 0 - Project Setup Status</h2>
-      <p><strong>Frontend:</strong> React + Vite + React Router DOM + Axios</p>
-      <p><strong>Backend API Health Check:</strong> {error ? <span style={{ color: '#ff6b6b' }}>Error: {error}</span> : <span style={{ color: '#51cf66' }}>{status}</span>}</p>
-    </div>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          isAuthenticated ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />
+        }
+      />
+    </Routes>
   );
 }
 
 function App() {
   return (
-    <div>
-      <header style={{ marginBottom: '2rem' }}>
-        <h1>Employee Management Dashboard</h1>
-        <nav style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-          <Link to="/" style={{ color: '#646cff' }}>Home (Setup Test)</Link>
-          <Link to="/login" style={{ color: '#646cff' }}>Login Placeholder</Link>
-        </nav>
-      </header>
-      <main>
-        <Routes>
-          <Route path="/" element={<HealthCheck />} />
-          <Route path="/login" element={<div><h3>Login Route Placeholder (Phase 2)</h3></div>} />
-        </Routes>
-      </main>
-    </div>
+    <AuthProvider>
+      <div style={{ width: '100%' }}>
+        <AppRoutes />
+      </div>
+    </AuthProvider>
   );
 }
 
