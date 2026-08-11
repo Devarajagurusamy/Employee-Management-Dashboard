@@ -18,6 +18,62 @@ const getEmployees = async (req, res, next) => {
   }
 };
 
+// @desc    Get employee analytics metrics
+// @route   GET /api/employees/analytics
+// @access  Private
+const getEmployeeAnalytics = async (req, res, next) => {
+  try {
+    const totalEmployees = await Employee.countDocuments();
+    const activeEmployees = await Employee.countDocuments({ status: 'Active' });
+    const inactiveEmployees = await Employee.countDocuments({ status: 'Inactive' });
+
+    // Department-wise counts
+    const departmentWiseCount = await Employee.aggregate([
+      { $group: { _id: '$department', count: { $sum: 1 } } },
+      { $project: { department: '$_id', count: 1, _id: 0 } },
+      { $sort: { count: -1 } },
+    ]);
+
+    // Monthly joined employees (safely converting joiningDate to Date object for YYYY-MM string format)
+    const monthlyJoinedEmployees = await Employee.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%Y-%m',
+              date: { $toDate: '$joiningDate' },
+            },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      { $project: { month: '$_id', count: 1, _id: 0 } },
+      { $sort: { month: 1 } },
+    ]);
+
+    // Status distribution
+    const statusDistribution = [
+      { status: 'Active', count: activeEmployees },
+      { status: 'Inactive', count: inactiveEmployees },
+    ];
+
+    return res.status(200).json({
+      success: true,
+      message: 'Employee analytics fetched successfully',
+      data: {
+        totalEmployees,
+        activeEmployees,
+        inactiveEmployees,
+        departmentWiseCount,
+        monthlyJoinedEmployees,
+        statusDistribution,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Get single employee by ID
 // @route   GET /api/employees/:id
 // @access  Private
@@ -210,6 +266,7 @@ const deleteEmployee = async (req, res, next) => {
 
 module.exports = {
   getEmployees,
+  getEmployeeAnalytics,
   getEmployeeById,
   createEmployee,
   updateEmployee,

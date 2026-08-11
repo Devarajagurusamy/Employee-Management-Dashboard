@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
   getEmployees,
+  getEmployeeAnalytics,
   getEmployeeById,
   createEmployee,
   updateEmployee,
@@ -13,6 +14,10 @@ const { protect } = require('../middleware/authMiddleware');
 router.use(protect);
 
 router.route('/').get(getEmployees).post(createEmployee);
+
+// Static analytics route must be registered BEFORE parametric :id route
+router.route('/analytics').get(getEmployeeAnalytics);
+
 router
   .route('/:id')
   .get(getEmployeeById)

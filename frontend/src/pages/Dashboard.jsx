@@ -7,12 +7,22 @@ import DeleteConfirmation from '../components/employees/DeleteConfirmation';
 import EmployeeFilters from '../components/employees/EmployeeFilters';
 import Pagination from '../components/employees/Pagination';
 
+import AnalyticsCards from '../components/analytics/AnalyticsCards';
+import DepartmentChart from '../components/analytics/DepartmentChart';
+import MonthlyJoinedChart from '../components/analytics/MonthlyJoinedChart';
+import StatusDistributionChart from '../components/analytics/StatusDistributionChart';
+
 function Dashboard() {
   const { user, logout } = useAuth();
 
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Global Analytics State
+  const [analytics, setAnalytics] = useState(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const [analyticsError, setAnalyticsError] = useState('');
 
   // Search & Filter States
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,8 +63,28 @@ function Dashboard() {
     }
   };
 
+  const fetchAnalytics = async () => {
+    setAnalyticsLoading(true);
+    setAnalyticsError('');
+    try {
+      const res = await employeeService.getEmployeeAnalytics();
+      if (res && res.success) {
+        setAnalytics(res.data);
+      } else {
+        setAnalyticsError(res?.message || 'Failed to load analytics metrics.');
+      }
+    } catch (err) {
+      console.error('Error fetching analytics:', err);
+      const msg = err.response?.data?.message || 'Unable to load analytics data.';
+      setAnalyticsError(msg);
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchEmployeeList();
+    fetchAnalytics();
   }, []);
 
   // Reset page to 1 whenever search term or filter selection changes
@@ -160,6 +190,7 @@ function Dashboard() {
           );
           setIsFormOpen(false);
           setSelectedEmployee(null);
+          fetchAnalytics(); // Refresh global analytics
         } else {
           setFormError(res?.message || 'Failed to update employee.');
         }
@@ -170,6 +201,7 @@ function Dashboard() {
           setEmployees((prev) => [res.data, ...prev]);
           setIsFormOpen(false);
           setCurrentPage(1); // Jump to first page so newly created employee is immediately visible
+          fetchAnalytics(); // Refresh global analytics
         } else {
           setFormError(res?.message || 'Failed to create employee.');
         }
@@ -210,6 +242,7 @@ function Dashboard() {
         );
         setIsDeleteOpen(false);
         setEmployeeToDelete(null);
+        fetchAnalytics(); // Refresh global analytics
       } else {
         alert(res?.message || 'Failed to delete employee.');
       }
@@ -237,7 +270,43 @@ function Dashboard() {
         </button>
       </header>
 
-      {/* Action Bar */}
+      {/* Global Analytics Section */}
+      <section style={styles.analyticsSection}>
+        <div style={styles.sectionHeader}>
+          <h3 style={styles.sectionTitle}>System Analytics & Metrics</h3>
+          <p style={styles.sectionSubtitle}>
+            Real-time organizational insights calculated from MongoDB dataset
+          </p>
+        </div>
+
+        {analyticsLoading ? (
+          <div style={styles.stateContainer}>
+            <p style={{ color: '#4c6ef5', fontWeight: '500' }}>Loading analytics...</p>
+          </div>
+        ) : analyticsError ? (
+          <div style={styles.stateContainer}>
+            <p style={{ color: '#ff6b6b', fontWeight: '500' }}>{analyticsError}</p>
+          </div>
+        ) : (
+          <>
+            {/* KPI Summary Cards */}
+            <AnalyticsCards
+              totalEmployees={analytics?.totalEmployees || 0}
+              activeEmployees={analytics?.activeEmployees || 0}
+              inactiveEmployees={analytics?.inactiveEmployees || 0}
+            />
+
+            {/* Charts Grid */}
+            <div style={styles.chartsGrid}>
+              <DepartmentChart data={analytics?.departmentWiseCount || []} />
+              <MonthlyJoinedChart data={analytics?.monthlyJoinedEmployees || []} />
+              <StatusDistributionChart data={analytics?.statusDistribution || []} />
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* Action Bar for Employee Table */}
       <div style={styles.actionBar}>
         <div>
           <h3 style={styles.sectionTitle}>Employee Records</h3>
@@ -347,17 +416,15 @@ const styles = {
     fontSize: '0.875rem',
     transition: 'background 0.2s',
   },
-  actionBar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '1.25rem',
-    flexWrap: 'wrap',
-    gap: '1rem',
+  analyticsSection: {
+    marginBottom: '2rem',
+  },
+  sectionHeader: {
+    marginBottom: '1rem',
   },
   sectionTitle: {
     margin: 0,
-    fontSize: '1.2rem',
+    fontSize: '1.25rem',
     color: '#fff',
     fontWeight: '600',
   },
@@ -365,6 +432,19 @@ const styles = {
     margin: '0.2rem 0 0 0',
     fontSize: '0.85rem',
     color: '#777',
+  },
+  chartsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+    gap: '1.25rem',
+  },
+  actionBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '1.25rem',
+    flexWrap: 'wrap',
+    gap: '1rem',
   },
   addBtn: {
     padding: '0.65rem 1.25rem',
@@ -376,6 +456,13 @@ const styles = {
     fontSize: '0.9rem',
     cursor: 'pointer',
     boxShadow: '0 2px 8px rgba(76, 110, 245, 0.3)',
+  },
+  stateContainer: {
+    padding: '2.5rem',
+    textAlign: 'center',
+    backgroundColor: '#1e1e1e',
+    borderRadius: '8px',
+    border: '1px solid #333',
   },
 };
 
