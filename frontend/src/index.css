@@ -1,88 +1,13 @@
+@import 'aos/dist/aos.css';
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-:root, :root[data-theme="light"] {
-  --font-family: 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
-  
-  --bg-page: #EBF0F7;
-  --bg-shell: #FFFFFF;
-  --bg-card: #FFFFFF;
-  --bg-card-muted: #F8FAFC;
-  --bg-input: #F1F5F9;
-  --border-color: #E2E8F0;
-  --border-soft: rgba(15, 23, 42, 0.06);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  --text-primary: #0F172A;
-  --text-secondary: #64748B;
-  --text-muted: #94A3B8;
-
-  --primary: #155EEF;
-  --primary-hover: #0D47C6;
-  --primary-soft: #EBF2FE;
-
-  --accent-blue: #0284C7;
-  --accent-green: #10B981;
-  --accent-orange: #F59E0B;
-  --accent-red: #EF4444;
-
-  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-  --glass-border: rgba(255, 255, 255, 0.8);
-
-  color-scheme: light;
-}
-
-:root[data-theme="dark"] {
-  --bg-page: #0B0F19;
-  --bg-shell: #111827;
-  --bg-card: #1E293B;
-  --bg-card-muted: #172033;
-  --bg-input: #0F172A;
-  --border-color: #334155;
-  --border-soft: rgba(255, 255, 255, 0.08);
-
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-
-  --primary: #3B82F6;
-  --primary-hover: #2563EB;
-  --primary-soft: rgba(59, 130, 246, 0.15);
-
-  --accent-blue: #38BDF8;
-  --accent-green: #34D399;
-  --accent-orange: #FBBF24;
-  --accent-red: #F87171;
-
-  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  --glass-border: rgba(255, 255, 255, 0.1);
-
-  color-scheme: dark;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-
-body {
-  font-family: var(--font-family);
-  background-color: var(--bg-page);
-  color: var(--text-primary);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 1.5rem;
-  -webkit-font-smoothing: antialiased;
-}
-
-#root {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-button, input, select {
-  font-family: inherit;
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    @apply bg-[#f4f7fb] dark:bg-[#1e1e1e] text-slate-800 dark:text-slate-100 min-h-screen antialiased;
+  }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { X, AlertCircle, UserPlus, Edit3 } from 'lucide-react';
 
 function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, apiError }) {
   const isEditMode = !!initialData;
@@ -16,7 +17,6 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
 
   useEffect(() => {
     if (initialData) {
-      // Format date for date input (YYYY-MM-DD)
       let formattedDate = '';
       if (initialData.joiningDate) {
         const d = new Date(initialData.joiningDate);
@@ -101,150 +101,168 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
   };
 
   return (
-    <div style={styles.overlay}>
-      <div style={styles.modal}>
-        <div style={styles.header}>
-          <h3 style={styles.title}>
-            {isEditMode ? 'Edit Employee Record' : 'Add New Employee'}
+    <div className="fixed inset-0 bg-slate-900/65 backdrop-blur-sm flex justify-center items-center z-[1000] p-4">
+      <div
+        data-aos="zoom-in"
+        data-aos-duration="300"
+        className="bg-white dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42] w-full max-w-lg p-7 shadow-2xl text-left"
+      >
+        <div className="flex justify-between items-center pb-3 mb-5 border-b border-slate-200 dark:border-[#3e3e42]">
+          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2 m-0">
+            {isEditMode ? (
+              <>
+                <Edit3 className="w-5 h-5 text-[#007acc]" /> Edit Employee Record
+              </>
+            ) : (
+              <>
+                <UserPlus className="w-5 h-5 text-[#007acc]" /> Add New Employee
+              </>
+            )}
           </h3>
-          <button onClick={onClose} style={styles.closeBtn} disabled={isSubmitting}>
-            &times;
+          <button
+            onClick={onClose}
+            className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-lg transition-colors"
+            disabled={isSubmitting}
+            type="button"
+          >
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        {apiError && <div style={styles.alertError}>{apiError}</div>}
+        {apiError && (
+          <div className="flex items-center gap-2 p-3.5 mb-5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-600 dark:text-rose-400 text-sm">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span>{apiError}</span>
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} style={styles.form} noValidate>
-          <div style={styles.formRow}>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Full Name *</label>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                Full Name *
+              </label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g. John Doe"
-                style={{
-                  ...styles.input,
-                  borderColor: errors.name ? 'var(--accent-red)' : 'var(--border-color)',
-                }}
+                className={`p-2.5 rounded-xl border bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none transition-colors ${
+                  errors.name ? 'border-rose-500' : 'border-slate-200 dark:border-[#3e3e42] focus:border-[#007acc]'
+                }`}
                 disabled={isSubmitting}
               />
-              {errors.name && <span style={styles.errorText}>{errors.name}</span>}
+              {errors.name && <span className="text-xs text-rose-500">{errors.name}</span>}
             </div>
 
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Email Address *</label>
+            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                Email Address *
+              </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="e.g. john@example.com"
-                style={{
-                  ...styles.input,
-                  borderColor: errors.email ? 'var(--accent-red)' : 'var(--border-color)',
-                }}
+                className={`p-2.5 rounded-xl border bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none transition-colors ${
+                  errors.email ? 'border-rose-500' : 'border-slate-200 dark:border-[#3e3e42] focus:border-[#007acc]'
+                }`}
                 disabled={isSubmitting}
               />
-              {errors.email && <span style={styles.errorText}>{errors.email}</span>}
+              {errors.email && <span className="text-xs text-rose-500">{errors.email}</span>}
             </div>
           </div>
 
-          <div style={styles.formRow}>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Department *</label>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                Department *
+              </label>
               <input
                 type="text"
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
                 placeholder="e.g. Engineering"
-                style={{
-                  ...styles.input,
-                  borderColor: errors.department ? 'var(--accent-red)' : 'var(--border-color)',
-                }}
+                className={`p-2.5 rounded-xl border bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none transition-colors ${
+                  errors.department ? 'border-rose-500' : 'border-slate-200 dark:border-[#3e3e42] focus:border-[#007acc]'
+                }`}
                 disabled={isSubmitting}
               />
-              {errors.department && (
-                <span style={styles.errorText}>{errors.department}</span>
-              )}
+              {errors.department && <span className="text-xs text-rose-500">{errors.department}</span>}
             </div>
 
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Designation *</label>
+            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                Designation *
+              </label>
               <input
                 type="text"
                 name="designation"
                 value={formData.designation}
                 onChange={handleChange}
                 placeholder="e.g. Software Engineer"
-                style={{
-                  ...styles.input,
-                  borderColor: errors.designation ? 'var(--accent-red)' : 'var(--border-color)',
-                }}
+                className={`p-2.5 rounded-xl border bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none transition-colors ${
+                  errors.designation ? 'border-rose-500' : 'border-slate-200 dark:border-[#3e3e42] focus:border-[#007acc]'
+                }`}
                 disabled={isSubmitting}
               />
-              {errors.designation && (
-                <span style={styles.errorText}>{errors.designation}</span>
-              )}
+              {errors.designation && <span className="text-xs text-rose-500">{errors.designation}</span>}
             </div>
           </div>
 
-          <div style={styles.formRow}>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Status *</label>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                Status *
+              </label>
               <select
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                style={{
-                  ...styles.select,
-                  borderColor: errors.status ? 'var(--accent-red)' : 'var(--border-color)',
-                }}
+                className={`p-2.5 rounded-xl border bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none cursor-pointer transition-colors ${
+                  errors.status ? 'border-rose-500' : 'border-slate-200 dark:border-[#3e3e42] focus:border-[#007acc]'
+                }`}
                 disabled={isSubmitting}
               >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
+                <option value="Active" className="dark:bg-[#1e1e1e]">Active</option>
+                <option value="Inactive" className="dark:bg-[#1e1e1e]">Inactive</option>
               </select>
-              {errors.status && <span style={styles.errorText}>{errors.status}</span>}
+              {errors.status && <span className="text-xs text-rose-500">{errors.status}</span>}
             </div>
 
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Joining Date *</label>
+            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                Joining Date *
+              </label>
               <input
                 type="date"
                 name="joiningDate"
                 value={formData.joiningDate}
                 onChange={handleChange}
-                style={{
-                  ...styles.input,
-                  borderColor: errors.joiningDate ? 'var(--accent-red)' : 'var(--border-color)',
-                }}
+                className={`p-2.5 rounded-xl border bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none transition-colors ${
+                  errors.joiningDate ? 'border-rose-500' : 'border-slate-200 dark:border-[#3e3e42] focus:border-[#007acc]'
+                }`}
                 disabled={isSubmitting}
               />
-              {errors.joiningDate && (
-                <span style={styles.errorText}>{errors.joiningDate}</span>
-              )}
+              {errors.joiningDate && <span className="text-xs text-rose-500">{errors.joiningDate}</span>}
             </div>
           </div>
 
-          <div style={styles.actions}>
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-[#3e3e42] mt-2">
             <button
               type="button"
               onClick={onClose}
-              style={styles.cancelBtn}
+              className="px-5 py-2.5 bg-slate-100 dark:bg-[#1e1e1e] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#3e3e42] rounded-xl text-sm font-semibold hover:bg-slate-200 dark:hover:bg-[#3e3e42] transition-colors"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              style={{
-                ...styles.submitBtn,
-                opacity: isSubmitting ? 0.7 : 1,
-                cursor: isSubmitting ? 'not-allowed' : 'pointer',
-              }}
+              className="px-5 py-2.5 bg-[#007acc] hover:bg-[#005fb8] text-white font-bold text-sm rounded-xl shadow-sm transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
               disabled={isSubmitting}
             >
               {isSubmitting
@@ -261,134 +279,5 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
     </div>
   );
 }
-
-const styles = {
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(15, 23, 42, 0.65)',
-    backdropFilter: 'blur(10px)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-    padding: '1rem',
-  },
-  modal: {
-    backgroundColor: 'var(--bg-card)',
-    borderRadius: '20px',
-    border: '1px solid var(--border-color)',
-    width: '100%',
-    maxWidth: '560px',
-    padding: '1.75rem',
-    boxShadow: 'var(--card-shadow)',
-    textAlign: 'left',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '1.25rem',
-    paddingBottom: '0.75rem',
-    borderBottom: '1px solid var(--border-color)',
-  },
-  title: {
-    margin: 0,
-    fontSize: '1.25rem',
-    fontWeight: '800',
-    color: 'var(--text-primary)',
-  },
-  closeBtn: {
-    background: 'none',
-    border: 'none',
-    color: 'var(--text-muted)',
-    fontSize: '1.5rem',
-    cursor: 'pointer',
-    lineHeight: '1',
-  },
-  alertError: {
-    padding: '0.65rem 0.85rem',
-    marginBottom: '1.25rem',
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    border: '1px solid var(--accent-red)',
-    borderRadius: '10px',
-    color: 'var(--accent-red)',
-    fontSize: '0.85rem',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  },
-  formRow: {
-    display: 'flex',
-    gap: '1rem',
-    flexWrap: 'wrap',
-  },
-  formGroup: {
-    flex: '1 1 200px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.35rem',
-  },
-  label: {
-    fontSize: '0.825rem',
-    fontWeight: '600',
-    color: 'var(--text-secondary)',
-  },
-  input: {
-    padding: '0.65rem 0.85rem',
-    borderRadius: '10px',
-    border: '1px solid var(--border-color)',
-    backgroundColor: 'var(--bg-input)',
-    color: 'var(--text-primary)',
-    fontSize: '0.9rem',
-    outline: 'none',
-  },
-  select: {
-    padding: '0.65rem 0.85rem',
-    borderRadius: '10px',
-    border: '1px solid var(--border-color)',
-    backgroundColor: 'var(--bg-input)',
-    color: 'var(--text-primary)',
-    fontSize: '0.9rem',
-    outline: 'none',
-  },
-  errorText: {
-    color: 'var(--accent-red)',
-    fontSize: '0.75rem',
-  },
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '0.75rem',
-    marginTop: '1rem',
-    paddingTop: '1rem',
-    borderTop: '1px solid var(--border-soft)',
-  },
-  cancelBtn: {
-    padding: '0.6rem 1.25rem',
-    backgroundColor: 'var(--bg-input)',
-    color: 'var(--text-secondary)',
-    border: '1px solid var(--border-color)',
-    borderRadius: '12px',
-    fontSize: '0.9rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-  },
-  submitBtn: {
-    padding: '0.6rem 1.25rem',
-    backgroundColor: 'var(--primary)',
-    color: '#FFFFFF',
-    border: 'none',
-    borderRadius: '12px',
-    fontSize: '0.9rem',
-    fontWeight: '700',
-    boxShadow: '0 4px 12px rgba(21, 94, 239, 0.3)',
-  },
-};
 
 export default EmployeeForm;

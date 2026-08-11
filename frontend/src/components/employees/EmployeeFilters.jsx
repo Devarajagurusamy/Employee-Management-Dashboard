@@ -1,4 +1,5 @@
 import React from 'react';
+import { Search, Filter, Plus, X } from 'lucide-react';
 
 function EmployeeFilters({
   searchTerm,
@@ -13,79 +14,95 @@ function EmployeeFilters({
   onAddEmployee,
 }) {
   return (
-    <div style={styles.container}>
-      <div style={styles.filterGroup}>
+    <div
+      data-aos="fade-up"
+      className="bg-white dark:bg-[#2d2d30] p-5 rounded-2xl border border-slate-200 dark:border-[#3e3e42] mb-5 shadow-sm"
+    >
+      <div className="flex flex-wrap gap-4 items-end">
         {/* Search Input */}
-        <div style={{ ...styles.inputWrapper, flex: '2 1 240px' }}>
-          <label htmlFor="employee-search" style={styles.label}>
+        <div className="flex flex-col gap-1.5 flex-[2_1_240px]">
+          <label htmlFor="employee-search" className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
             Search
           </label>
-          <div style={styles.searchBox}>
-            <span style={styles.searchIcon}>🔍</span>
+          <div className="flex items-center bg-slate-100 dark:bg-[#1e1e1e] rounded-xl border border-slate-200 dark:border-[#3e3e42] px-3.5 focus-within:border-[#007acc] transition-colors">
+            <Search className="w-4 h-4 text-slate-400 mr-2 flex-shrink-0" />
             <input
               id="employee-search"
               type="text"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search by name or email..."
-              style={styles.searchInput}
+              className="w-full py-2.5 bg-transparent border-none text-slate-900 dark:text-white text-sm outline-none placeholder:text-slate-400"
             />
           </div>
         </div>
 
         {/* Department Filter */}
-        <div style={{ ...styles.inputWrapper, flex: '1 1 180px' }}>
-          <label htmlFor="department-filter" style={styles.label}>
+        <div className="flex flex-col gap-1.5 flex-[1_1_180px]">
+          <label htmlFor="department-filter" className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
             Department
           </label>
-          <select
-            id="department-filter"
-            value={selectedDepartment}
-            onChange={(e) => onDepartmentChange(e.target.value)}
-            style={styles.select}
-          >
-            <option value="All">All Departments</option>
-            {departments.map((dept) => (
-              <option key={dept} value={dept}>
-                {dept}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center bg-slate-100 dark:bg-[#1e1e1e] rounded-xl border border-slate-200 dark:border-[#3e3e42] px-3.5">
+            <Filter className="w-4 h-4 text-slate-400 mr-2 flex-shrink-0" />
+            <select
+              id="department-filter"
+              value={selectedDepartment}
+              onChange={(e) => onDepartmentChange(e.target.value)}
+              className="w-full py-2.5 bg-transparent border-none text-slate-900 dark:text-white text-sm outline-none cursor-pointer"
+            >
+              <option value="All" className="dark:bg-[#1e1e1e]">All Departments</option>
+              {departments.map((dept) => (
+                <option key={dept} value={dept} className="dark:bg-[#1e1e1e]">
+                  {dept}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Status Filter */}
-        <div style={{ ...styles.inputWrapper, flex: '1 1 150px' }}>
-          <label htmlFor="status-filter" style={styles.label}>
+        <div className="flex flex-col gap-1.5 flex-[1_1_150px]">
+          <label htmlFor="status-filter" className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-left">
             Status
           </label>
           <select
             id="status-filter"
             value={selectedStatus}
             onChange={(e) => onStatusChange(e.target.value)}
-            style={styles.select}
+            className="py-2.5 px-3.5 rounded-xl border border-slate-200 dark:border-[#3e3e42] bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none cursor-pointer"
           >
-            <option value="All">All Statuses</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="All" className="dark:bg-[#1e1e1e]">All Statuses</option>
+            <option value="Active" className="dark:bg-[#1e1e1e]">Active</option>
+            <option value="Inactive" className="dark:bg-[#1e1e1e]">Inactive</option>
           </select>
         </div>
 
         {/* Clear Filters Button */}
         {hasActiveFilters && (
-          <div style={{ ...styles.inputWrapper, flex: '0 0 auto', justifyContent: 'flex-end' }}>
-            <label style={{ ...styles.label, visibility: 'hidden' }}>Clear</label>
-            <button onClick={onClearFilters} style={styles.clearBtn} type="button">
+          <div className="flex flex-col gap-1.5 flex-none justify-end">
+            <label className="text-xs font-bold uppercase invisible">Clear</label>
+            <button
+              onClick={onClearFilters}
+              className="flex items-center gap-1.5 px-4 py-2.5 bg-slate-200 dark:bg-[#3e3e42] text-slate-800 dark:text-white hover:bg-slate-300 dark:hover:bg-[#4e4e52] rounded-xl text-sm font-semibold transition-colors"
+              type="button"
+            >
+              <X className="w-4 h-4" />
               Clear Filters
             </button>
           </div>
         )}
 
-        {/* Add Employee Button (Prominent Action from reference design) */}
+        {/* Add Employee Action Button */}
         {onAddEmployee && (
-          <div style={{ ...styles.inputWrapper, flex: '0 0 auto', marginLeft: 'auto', justifyContent: 'flex-end' }}>
-            <label style={{ ...styles.label, visibility: 'hidden' }}>Action</label>
-            <button onClick={onAddEmployee} style={styles.addBtn} type="button">
-              + Add Employee
+          <div className="flex flex-col gap-1.5 flex-none ml-auto justify-end">
+            <label className="text-xs font-bold uppercase invisible">Action</label>
+            <button
+              onClick={onAddEmployee}
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#007acc] hover:bg-[#005fb8] text-white font-bold text-sm rounded-xl shadow-sm transition-colors whitespace-nowrap"
+              type="button"
+            >
+              <Plus className="w-4 h-4" />
+              Add Employee
             </button>
           </div>
         )}
@@ -93,90 +110,5 @@ function EmployeeFilters({
     </div>
   );
 }
-
-const styles = {
-  container: {
-    backgroundColor: 'var(--bg-card)',
-    padding: '1.25rem',
-    borderRadius: '18px',
-    border: '1px solid var(--border-color)',
-    marginBottom: '1.25rem',
-    boxShadow: 'var(--card-shadow)',
-  },
-  filterGroup: {
-    display: 'flex',
-    gap: '1rem',
-    alignItems: 'flex-end',
-    flexWrap: 'wrap',
-  },
-  inputWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.4rem',
-  },
-  label: {
-    fontSize: '0.75rem',
-    fontWeight: '700',
-    color: 'var(--text-secondary)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-    textAlign: 'left',
-  },
-  searchBox: {
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: 'var(--bg-input)',
-    borderRadius: '12px',
-    border: '1px solid var(--border-color)',
-    padding: '0 0.85rem',
-  },
-  searchIcon: {
-    fontSize: '0.9rem',
-    color: 'var(--text-muted)',
-    marginRight: '0.5rem',
-  },
-  searchInput: {
-    width: '100%',
-    padding: '0.65rem 0',
-    border: 'none',
-    backgroundColor: 'transparent',
-    color: 'var(--text-primary)',
-    fontSize: '0.9rem',
-    outline: 'none',
-  },
-  select: {
-    padding: '0.65rem 0.85rem',
-    borderRadius: '12px',
-    border: '1px solid var(--border-color)',
-    backgroundColor: 'var(--bg-input)',
-    color: 'var(--text-primary)',
-    fontSize: '0.9rem',
-    outline: 'none',
-    cursor: 'pointer',
-  },
-  clearBtn: {
-    padding: '0.65rem 1rem',
-    backgroundColor: 'transparent',
-    color: 'var(--accent-red)',
-    border: '1px solid var(--accent-red)',
-    borderRadius: '12px',
-    fontSize: '0.875rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    whiteSpace: 'nowrap',
-  },
-  addBtn: {
-    padding: '0.65rem 1.25rem',
-    backgroundColor: 'var(--primary)',
-    color: '#FFFFFF',
-    border: 'none',
-    borderRadius: '12px',
-    fontWeight: '700',
-    fontSize: '0.9rem',
-    cursor: 'pointer',
-    boxShadow: '0 4px 12px rgba(21, 94, 239, 0.3)',
-    whiteSpace: 'nowrap',
-  },
-};
 
 export default EmployeeFilters;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 function Pagination({
   currentPage,
@@ -12,7 +13,6 @@ function Pagination({
   const startItem = (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalItems);
 
-  // Generate array of page numbers to display
   const getPageNumbers = () => {
     const pages = [];
     const maxVisible = 5;
@@ -35,55 +35,57 @@ function Pagination({
   const pageNumbers = getPageNumbers();
 
   return (
-    <div style={styles.container}>
+    <div
+      data-aos="fade-up"
+      className="flex flex-wrap justify-between items-center mt-5 px-5 py-3.5 bg-white dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42] shadow-sm gap-4"
+    >
       {/* Pagination Info */}
-      <div style={styles.info}>
-        Showing <strong style={{ color: 'var(--text-primary)' }}>{startItem}</strong>–
-        <strong style={{ color: 'var(--text-primary)' }}>{endItem}</strong> of{' '}
-        <strong style={{ color: 'var(--text-primary)' }}>{totalItems}</strong> employees
+      <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+        Showing <strong className="text-slate-900 dark:text-white font-bold">{startItem}</strong>–
+        <strong className="text-slate-900 dark:text-white font-bold">{endItem}</strong> of{' '}
+        <strong className="text-slate-900 dark:text-white font-bold">{totalItems}</strong> employees
       </div>
 
       {/* Pagination Controls */}
-      <div style={styles.controls}>
+      <div className="flex items-center gap-1.5 flex-wrap">
         {/* Previous Button */}
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          style={{
-            ...styles.btn,
-            ...(currentPage === 1 ? styles.btnDisabled : {}),
-          }}
+          className="flex items-center gap-1 px-3 py-1.5 bg-slate-100 dark:bg-[#1e1e1e] text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-[#3e3e42] rounded-xl text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-200 dark:hover:bg-[#3e3e42] transition-colors"
           aria-label="Previous page"
           type="button"
         >
-          &laquo; Previous
+          <ChevronLeft className="w-4 h-4" />
+          <span>Previous</span>
         </button>
 
-        {/* First Page Quick Link if offset */}
+        {/* First Page Link if offset */}
         {pageNumbers[0] > 1 && (
           <>
             <button
               onClick={() => onPageChange(1)}
-              style={styles.pageBtn}
+              className="min-w-[34px] px-2.5 py-1.5 bg-slate-100 dark:bg-[#1e1e1e] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#3e3e42] rounded-xl text-xs font-semibold hover:bg-slate-200 dark:hover:bg-[#3e3e42] transition-colors"
               type="button"
             >
               1
             </button>
-            {pageNumbers[0] > 2 && <span style={styles.ellipsis}>...</span>}
+            {pageNumbers[0] > 2 && <span className="text-slate-400 px-1 text-xs">...</span>}
           </>
         )}
 
-        {/* Page Number Buttons */}
+        {/* Page Numbers */}
         {pageNumbers.map((page) => {
           const isActive = page === currentPage;
           return (
             <button
               key={page}
               onClick={() => onPageChange(page)}
-              style={{
-                ...styles.pageBtn,
-                ...(isActive ? styles.pageBtnActive : {}),
-              }}
+              className={`min-w-[34px] px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                isActive
+                  ? 'bg-[#007acc] text-white border border-[#007acc] shadow-sm'
+                  : 'bg-slate-100 dark:bg-[#1e1e1e] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#3e3e42] hover:bg-slate-200 dark:hover:bg-[#3e3e42]'
+              }`}
               aria-current={isActive ? 'page' : undefined}
               type="button"
             >
@@ -92,15 +94,15 @@ function Pagination({
           );
         })}
 
-        {/* Last Page Quick Link if offset */}
+        {/* Last Page Link if offset */}
         {pageNumbers[pageNumbers.length - 1] < totalPages && (
           <>
             {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-              <span style={styles.ellipsis}>...</span>
+              <span className="text-slate-400 px-1 text-xs">...</span>
             )}
             <button
               onClick={() => onPageChange(totalPages)}
-              style={styles.pageBtn}
+              className="min-w-[34px] px-2.5 py-1.5 bg-slate-100 dark:bg-[#1e1e1e] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#3e3e42] rounded-xl text-xs font-semibold hover:bg-slate-200 dark:hover:bg-[#3e3e42] transition-colors"
               type="button"
             >
               {totalPages}
@@ -112,82 +114,16 @@ function Pagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          style={{
-            ...styles.btn,
-            ...(currentPage === totalPages ? styles.btnDisabled : {}),
-          }}
+          className="flex items-center gap-1 px-3 py-1.5 bg-slate-100 dark:bg-[#1e1e1e] text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-[#3e3e42] rounded-xl text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-200 dark:hover:bg-[#3e3e42] transition-colors"
           aria-label="Next page"
           type="button"
         >
-          Next &raquo;
+          <span>Next</span>
+          <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: '1.25rem',
-    padding: '0.75rem 1.25rem',
-    backgroundColor: 'var(--bg-card)',
-    borderRadius: '16px',
-    border: '1px solid var(--border-color)',
-    flexWrap: 'wrap',
-    gap: '1rem',
-    boxShadow: 'var(--card-shadow)',
-  },
-  info: {
-    fontSize: '0.875rem',
-    color: 'var(--text-secondary)',
-  },
-  controls: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.4rem',
-    flexWrap: 'wrap',
-  },
-  btn: {
-    padding: '0.45rem 0.85rem',
-    backgroundColor: 'var(--bg-input)',
-    color: 'var(--text-primary)',
-    border: '1px solid var(--border-color)',
-    borderRadius: '10px',
-    fontSize: '0.85rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-  },
-  btnDisabled: {
-    opacity: 0.4,
-    cursor: 'not-allowed',
-    color: 'var(--text-muted)',
-  },
-  pageBtn: {
-    padding: '0.45rem 0.75rem',
-    backgroundColor: 'var(--bg-input)',
-    color: 'var(--text-secondary)',
-    border: '1px solid var(--border-color)',
-    borderRadius: '10px',
-    fontSize: '0.85rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    minWidth: '36px',
-  },
-  pageBtnActive: {
-    backgroundColor: 'var(--primary)',
-    color: '#FFFFFF',
-    borderColor: 'var(--primary)',
-    fontWeight: '700',
-    boxShadow: '0 2px 8px rgba(21, 94, 239, 0.3)',
-  },
-  ellipsis: {
-    color: 'var(--text-muted)',
-    padding: '0 0.25rem',
-    fontSize: '0.9rem',
-  },
-};
 
 export default Pagination;

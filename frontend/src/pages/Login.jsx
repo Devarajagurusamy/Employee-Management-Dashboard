@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { Sun, Moon, LogIn, AlertCircle } from 'lucide-react';
 
 function Login() {
   const { login, isAuthenticated, loading: authLoading } = useAuth();
@@ -17,7 +18,6 @@ function Login() {
   const [apiError, setApiError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // If already authenticated and done initializing, redirect to dashboard
   if (!authLoading && isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -70,30 +70,60 @@ function Login() {
   };
 
   return (
-    <div style={styles.container}>
-      {/* Theme Toggle Pill */}
-      <div style={styles.themePosition}>
-        <button onClick={toggleTheme} style={styles.themeToggleBtn} type="button">
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+    <div className="min-h-[85vh] flex justify-center items-center relative w-full p-4">
+      {/* Theme Toggle Button */}
+      <div className="absolute top-4 right-4">
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-[#3e3e42] bg-white dark:bg-[#2d2d30] text-slate-800 dark:text-slate-100 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-[#3e3e42] transition-colors shadow-sm"
+          type="button"
+        >
+          {theme === 'light' ? (
+            <>
+              <Moon className="w-4 h-4 text-slate-700" />
+              <span>Dark</span>
+            </>
+          ) : (
+            <>
+              <Sun className="w-4 h-4 text-amber-400" />
+              <span>Light</span>
+            </>
+          )}
         </button>
       </div>
 
-      <div style={styles.card}>
-        <div style={styles.brandHeader}>
-          <div style={styles.logoBadge}>
-            <div style={styles.logoIcon}></div>
-            <span style={styles.logoText}>EMD</span>
+      <div
+        data-aos="fade-up"
+        className="w-full max-w-md p-8 rounded-3xl bg-white dark:bg-[#252526] border border-slate-200 dark:border-[#3e3e42] shadow-sm text-left"
+      >
+        <div className="mb-6">
+          <div className="inline-flex items-center gap-2.5 bg-slate-100 dark:bg-[#2d2d30] px-4 py-2 rounded-full border border-slate-200 dark:border-[#3e3e42]">
+            <div className="w-5 h-5 rounded-full bg-[#007acc] flex items-center justify-center text-white text-xs font-black">
+              E
+            </div>
+            <span className="font-extrabold text-base tracking-wide text-slate-900 dark:text-white">
+              EMD
+            </span>
           </div>
         </div>
 
-        <h2 style={styles.title}>Employee Management Login</h2>
-        <p style={styles.subtitle}>Enter your admin credentials to access the dashboard</p>
+        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-2">
+          Employee Management Login
+        </h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+          Enter your admin credentials to access the dashboard
+        </p>
 
-        {apiError && <div style={styles.alertError}>{apiError}</div>}
+        {apiError && (
+          <div className="flex items-center gap-2 p-3.5 mb-5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-600 dark:text-rose-400 text-sm">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span>{apiError}</span>
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} style={styles.form} noValidate>
-          <div style={styles.formGroup}>
-            <label htmlFor="email" style={styles.label}>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="email" className="text-xs font-bold text-slate-600 dark:text-slate-300">
               Email Address
             </label>
             <input
@@ -103,17 +133,16 @@ function Login() {
               value={formData.email}
               onChange={handleChange}
               placeholder="e.g. admin@example.com"
-              style={{
-                ...styles.input,
-                borderColor: errors.email ? 'var(--accent-red)' : 'var(--border-color)',
-              }}
+              className={`p-3 rounded-xl border bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none transition-colors ${
+                errors.email ? 'border-rose-500' : 'border-slate-200 dark:border-[#3e3e42] focus:border-[#007acc]'
+              }`}
               disabled={isSubmitting}
             />
-            {errors.email && <span style={styles.errorText}>{errors.email}</span>}
+            {errors.email && <span className="text-xs text-rose-500">{errors.email}</span>}
           </div>
 
-          <div style={styles.formGroup}>
-            <label htmlFor="password" style={styles.label}>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="password" className="text-xs font-bold text-slate-600 dark:text-slate-300">
               Password
             </label>
             <input
@@ -123,169 +152,35 @@ function Login() {
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter password"
-              style={{
-                ...styles.input,
-                borderColor: errors.password ? 'var(--accent-red)' : 'var(--border-color)',
-              }}
+              className={`p-3 rounded-xl border bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none transition-colors ${
+                errors.password ? 'border-rose-500' : 'border-slate-200 dark:border-[#3e3e42] focus:border-[#007acc]'
+              }`}
               disabled={isSubmitting}
             />
-            {errors.password && <span style={styles.errorText}>{errors.password}</span>}
+            {errors.password && <span className="text-xs text-rose-500">{errors.password}</span>}
           </div>
 
           <button
             type="submit"
-            style={{
-              ...styles.button,
-              opacity: isSubmitting ? 0.7 : 1,
-              cursor: isSubmitting ? 'not-allowed' : 'pointer',
-            }}
+            className="flex items-center justify-center gap-2 p-3 mt-2 rounded-xl bg-[#007acc] hover:bg-[#005fb8] text-white font-bold text-base transition-colors shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Logging in...' : 'Sign In to Dashboard'}
+            <LogIn className="w-5 h-5" />
+            <span>{isSubmitting ? 'Logging in...' : 'Sign In to Dashboard'}</span>
           </button>
         </form>
 
-        <div style={styles.demoCredentials}>
-          <p style={{ margin: '0 0 0.5rem 0', fontWeight: '700', color: 'var(--text-primary)' }}>
+        <div className="mt-7 p-3.5 bg-slate-100 dark:bg-[#2d2d30] rounded-xl border border-slate-200 dark:border-[#3e3e42] text-xs text-slate-500 dark:text-slate-400">
+          <p className="font-bold text-slate-900 dark:text-white mb-1">
             Demo Test Credentials:
           </p>
-          <code style={styles.code}>admin@example.com / password123</code>
+          <code className="text-emerald-600 dark:text-emerald-400 font-mono font-bold">
+            admin@example.com / password123
+          </code>
         </div>
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '85vh',
-    position: 'relative',
-    width: '100%',
-  },
-  themePosition: {
-    position: 'absolute',
-    top: '1rem',
-    right: '1rem',
-  },
-  themeToggleBtn: {
-    padding: '0.45rem 0.85rem',
-    borderRadius: '16px',
-    border: '1px solid var(--border-color)',
-    backgroundColor: 'var(--bg-card)',
-    color: 'var(--text-primary)',
-    fontSize: '0.85rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-  },
-  card: {
-    width: '100%',
-    maxWidth: '440px',
-    padding: '2.5rem',
-    borderRadius: '24px',
-    backgroundColor: 'var(--bg-card)',
-    boxShadow: 'var(--card-shadow)',
-    textAlign: 'left',
-    border: '1px solid var(--border-color)',
-  },
-  brandHeader: {
-    marginBottom: '1.5rem',
-  },
-  logoBadge: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    backgroundColor: 'var(--bg-input)',
-    padding: '0.4rem 0.85rem',
-    borderRadius: '20px',
-    border: '1px solid var(--border-color)',
-  },
-  logoIcon: {
-    width: '18px',
-    height: '18px',
-    borderRadius: '50%',
-    background: 'linear-gradient(135deg, #155EEF 50%, #0284C7 50%)',
-  },
-  logoText: {
-    fontWeight: '800',
-    fontSize: '1rem',
-    color: 'var(--text-primary)',
-  },
-  title: {
-    margin: '0 0 0.5rem 0',
-    fontSize: '1.6rem',
-    fontWeight: '800',
-    color: 'var(--text-primary)',
-  },
-  subtitle: {
-    margin: '0 0 1.5rem 0',
-    fontSize: '0.9rem',
-    color: 'var(--text-secondary)',
-  },
-  alertError: {
-    padding: '0.75rem 1rem',
-    marginBottom: '1rem',
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    border: '1px solid var(--accent-red)',
-    borderRadius: '10px',
-    color: 'var(--accent-red)',
-    fontSize: '0.875rem',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.25rem',
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.4rem',
-  },
-  label: {
-    fontSize: '0.875rem',
-    fontWeight: '600',
-    color: 'var(--text-secondary)',
-  },
-  input: {
-    padding: '0.75rem 1rem',
-    borderRadius: '12px',
-    border: '1px solid var(--border-color)',
-    backgroundColor: 'var(--bg-input)',
-    color: 'var(--text-primary)',
-    fontSize: '0.95rem',
-    outline: 'none',
-  },
-  errorText: {
-    color: 'var(--accent-red)',
-    fontSize: '0.8rem',
-  },
-  button: {
-    padding: '0.85rem',
-    borderRadius: '12px',
-    border: 'none',
-    backgroundColor: 'var(--primary)',
-    color: '#ffffff',
-    fontSize: '1rem',
-    fontWeight: '700',
-    boxShadow: '0 4px 12px rgba(21, 94, 239, 0.3)',
-    cursor: 'pointer',
-  },
-  demoCredentials: {
-    marginTop: '1.75rem',
-    padding: '0.85rem',
-    backgroundColor: 'var(--bg-card-muted)',
-    borderRadius: '12px',
-    border: '1px solid var(--border-color)',
-    fontSize: '0.825rem',
-    color: 'var(--text-secondary)',
-  },
-  code: {
-    color: 'var(--accent-green)',
-    fontFamily: 'monospace',
-    fontWeight: '700',
-  },
-};
 
 export default Login;

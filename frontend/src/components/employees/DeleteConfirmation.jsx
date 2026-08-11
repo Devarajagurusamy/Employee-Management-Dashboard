@@ -1,25 +1,34 @@
 import React from 'react';
+import { AlertTriangle, Trash2 } from 'lucide-react';
 
 function DeleteConfirmation({ isOpen, onClose, onConfirm, employeeName, isDeleting }) {
   if (!isOpen) return null;
 
   return (
-    <div style={styles.overlay}>
-      <div style={styles.modal}>
-        <h3 style={styles.title}>Confirm Delete</h3>
-        <p style={styles.text}>
+    <div className="fixed inset-0 bg-slate-900/65 backdrop-blur-sm flex justify-center items-center z-[1000] p-4">
+      <div
+        data-aos="zoom-in"
+        data-aos-duration="300"
+        className="bg-white dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42] w-full max-w-md p-7 shadow-2xl text-left"
+      >
+        <div className="flex items-center gap-3 mb-3 text-rose-600 dark:text-rose-400">
+          <AlertTriangle className="w-6 h-6 flex-shrink-0" />
+          <h3 className="text-xl font-extrabold m-0">Confirm Delete</h3>
+        </div>
+
+        <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">
           Are you sure you want to delete employee{' '}
-          <strong style={{ color: 'var(--text-primary)' }}>"{employeeName}"</strong>?
+          <strong className="text-slate-900 dark:text-white font-bold">"{employeeName}"</strong>?
         </p>
-        <p style={styles.warning}>
+        <p className="text-xs text-slate-400 dark:text-slate-500 mb-6">
           This action will permanently remove the employee record from MongoDB.
         </p>
 
-        <div style={styles.actions}>
+        <div className="flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
-            style={styles.cancelBtn}
+            className="px-5 py-2.5 bg-slate-100 dark:bg-[#1e1e1e] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#3e3e42] rounded-xl text-sm font-semibold hover:bg-slate-200 dark:hover:bg-[#3e3e42] transition-colors"
             disabled={isDeleting}
           >
             Cancel
@@ -27,87 +36,16 @@ function DeleteConfirmation({ isOpen, onClose, onConfirm, employeeName, isDeleti
           <button
             type="button"
             onClick={onConfirm}
-            style={{
-              ...styles.deleteBtn,
-              opacity: isDeleting ? 0.7 : 1,
-              cursor: isDeleting ? 'not-allowed' : 'pointer',
-            }}
+            className="flex items-center gap-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm rounded-xl shadow-sm transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
             disabled={isDeleting}
           >
-            {isDeleting ? 'Deleting...' : 'Delete Employee'}
+            <Trash2 className="w-4 h-4" />
+            <span>{isDeleting ? 'Deleting...' : 'Delete Employee'}</span>
           </button>
         </div>
       </div>
     </div>
   );
 }
-
-const styles = {
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(15, 23, 42, 0.65)',
-    backdropFilter: 'blur(10px)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-    padding: '1rem',
-  },
-  modal: {
-    backgroundColor: 'var(--bg-card)',
-    borderRadius: '20px',
-    border: '1px solid var(--border-color)',
-    width: '100%',
-    maxWidth: '440px',
-    padding: '1.75rem',
-    boxShadow: 'var(--card-shadow)',
-    textAlign: 'left',
-  },
-  title: {
-    margin: '0 0 0.75rem 0',
-    fontSize: '1.2rem',
-    fontWeight: '800',
-    color: 'var(--accent-red)',
-  },
-  text: {
-    margin: '0 0 0.5rem 0',
-    fontSize: '0.95rem',
-    color: 'var(--text-secondary)',
-  },
-  warning: {
-    margin: '0 0 1.5rem 0',
-    fontSize: '0.85rem',
-    color: 'var(--text-muted)',
-  },
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '0.75rem',
-  },
-  cancelBtn: {
-    padding: '0.6rem 1.25rem',
-    backgroundColor: 'var(--bg-input)',
-    color: 'var(--text-secondary)',
-    border: '1px solid var(--border-color)',
-    borderRadius: '12px',
-    fontSize: '0.9rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-  },
-  deleteBtn: {
-    padding: '0.6rem 1.25rem',
-    backgroundColor: 'var(--accent-red)',
-    color: '#FFFFFF',
-    border: 'none',
-    borderRadius: '12px',
-    fontSize: '0.9rem',
-    fontWeight: '700',
-    boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
-  },
-};
 
 export default DeleteConfirmation;

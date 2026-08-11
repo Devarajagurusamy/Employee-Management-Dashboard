@@ -1,77 +1,118 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import {
+  LayoutDashboard,
+  Users,
+  BarChart3,
+  Sun,
+  Moon,
+  LogOut,
+  ShieldCheck,
+} from 'lucide-react';
 
 function TopNavbar({ activeTab = 'Dashboard', onTabChange }) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <nav style={styles.navbar}>
+    <nav className="flex flex-wrap justify-between items-center px-6 py-4 mb-6  rounded-2xl transition-colors duration-200">
       {/* Brand Logo */}
-      <div style={styles.brand}>
-        <div style={styles.logoBadge}>
-          <div style={styles.logoIcon}></div>
-          <span style={styles.logoText}>EMD</span>
+      <div className="flex items-center">
+        <div className="flex items-center gap-2.5 bg-slate-50 dark:bg-[#2d2d30] px-4 py-2 rounded-full border border-slate-200 dark:border-[#3e3e42]">
+          <div className="w-5 h-5 rounded-full bg-[#007acc] flex items-center justify-center text-white text-xs font-black">
+            E
+          </div>
+          <span className="font-extrabold text-base tracking-wide text-slate-900 dark:text-white">
+            EMD
+          </span>
         </div>
       </div>
 
-      {/* Navigation Tabs (Matching reference image pills) */}
-      <div style={styles.tabsContainer}>
+      {/* Navigation Tabs (Lucide Icons) */}
+      <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-[#2d2d30] p-1.5 rounded-full border border-slate-200 dark:border-[#3e3e42]">
         <button
           onClick={() => onTabChange && onTabChange('Dashboard')}
-          style={{
-            ...styles.tabBtn,
-            ...(activeTab === 'Dashboard' ? styles.tabBtnActive : {}),
-          }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+            activeTab === 'Dashboard'
+              ? 'bg-[#007acc] text-white shadow-md'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+          }`}
           type="button"
         >
-          <span style={styles.tabIcon}>📊</span> Dashboard
+          <LayoutDashboard className="w-4 h-4" />
+          Dashboard
         </button>
+
         <button
           onClick={() => onTabChange && onTabChange('Employees')}
-          style={{
-            ...styles.tabBtn,
-            ...(activeTab === 'Employees' ? styles.tabBtnActive : {}),
-          }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+            activeTab === 'Employees'
+              ? 'bg-[#007acc] text-white shadow-md'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+          }`}
           type="button"
         >
-          <span style={styles.tabIcon}>👥</span> Employees
+          <Users className="w-4 h-4" />
+          Employees
         </button>
+
         <button
           onClick={() => onTabChange && onTabChange('Analytics')}
-          style={{
-            ...styles.tabBtn,
-            ...(activeTab === 'Analytics' ? styles.tabBtnActive : {}),
-          }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+            activeTab === 'Analytics'
+              ? 'bg-[#007acc] text-white shadow-md'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+          }`}
           type="button"
         >
-          <span style={styles.tabIcon}>📈</span> Analytics
+          <BarChart3 className="w-4 h-4" />
+          Analytics
         </button>
       </div>
 
       {/* Right Controls */}
-      <div style={styles.rightGroup}>
-        {/* Theme Switcher Toggle Button */}
+      <div className="flex items-center gap-4">
+        {/* Theme Toggle Button */}
         <button
           onClick={toggleTheme}
-          style={styles.themeToggleBtn}
+          className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-[#3e3e42] bg-slate-50 dark:bg-[#2d2d30] text-slate-800 dark:text-slate-100 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-[#3e3e42] transition-colors"
           title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           type="button"
         >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+          {theme === 'light' ? (
+            <>
+              <Moon className="w-4 h-4 text-slate-700" />
+              <span>Dark</span>
+            </>
+          ) : (
+            <>
+              <Sun className="w-4 h-4 text-amber-400" />
+              <span>Light</span>
+            </>
+          )}
         </button>
 
         {/* User Profile Info & Logout */}
-        <div style={styles.userProfile}>
-          <div style={styles.avatar}>
+        <div className="flex items-center gap-3 bg-slate-50 dark:bg-[#2d2d30] px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-[#3e3e42]">
+          <div className="w-8 h-8 rounded-full bg-[#007acc] text-white font-extrabold text-sm flex items-center justify-center shadow-sm">
             {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
           </div>
-          <div style={styles.userDetails}>
-            <span style={styles.userName}>{user?.name || 'Admin User'}</span>
-            <span style={styles.userRole}>Administrator</span>
+          <div className="flex flex-col text-left">
+            <span className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
+              {user?.name || 'Admin User'}
+            </span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3 text-[#007acc]" /> Administrator
+            </span>
           </div>
-          <button onClick={logout} style={styles.logoutBtn} title="Logout">
+          <button
+            onClick={logout}
+            className="flex items-center gap-1 ml-1 px-2.5 py-1 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors"
+            title="Logout"
+            type="button"
+          >
+            <LogOut className="w-3.5 h-3.5" />
             Logout
           </button>
         </div>
@@ -79,144 +120,5 @@ function TopNavbar({ activeTab = 'Dashboard', onTabChange }) {
     </nav>
   );
 }
-
-const styles = {
-  navbar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0.85rem 1.25rem',
-    backgroundColor: 'var(--bg-card-muted)',
-    borderRadius: '16px',
-    border: '1px solid var(--border-soft)',
-    marginBottom: '1.5rem',
-    flexWrap: 'wrap',
-    gap: '1rem',
-    boxShadow: 'var(--card-shadow)',
-  },
-  brand: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  logoBadge: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    backgroundColor: 'var(--bg-shell)',
-    padding: '0.4rem 0.85rem',
-    borderRadius: '20px',
-    border: '1px solid var(--border-color)',
-    boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-  },
-  logoIcon: {
-    width: '18px',
-    height: '18px',
-    borderRadius: '50%',
-    background: 'linear-gradient(135deg, #155EEF 50%, #0284C7 50%)',
-  },
-  logoText: {
-    fontWeight: '800',
-    fontSize: '1rem',
-    color: 'var(--text-primary)',
-    letterSpacing: '0.5px',
-  },
-  tabsContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.35rem',
-    backgroundColor: 'var(--bg-shell)',
-    padding: '0.3rem 0.4rem',
-    borderRadius: '24px',
-    border: '1px solid var(--border-color)',
-  },
-  tabBtn: {
-    padding: '0.45rem 1rem',
-    borderRadius: '18px',
-    border: 'none',
-    backgroundColor: 'transparent',
-    color: 'var(--text-secondary)',
-    fontSize: '0.875rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.4rem',
-    transition: 'all 0.2s',
-  },
-  tabBtnActive: {
-    backgroundColor: 'var(--primary)',
-    color: '#FFFFFF',
-    boxShadow: '0 4px 12px rgba(21, 94, 239, 0.3)',
-  },
-  tabIcon: {
-    fontSize: '0.9rem',
-  },
-  rightGroup: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-  },
-  themeToggleBtn: {
-    padding: '0.45rem 0.85rem',
-    borderRadius: '16px',
-    border: '1px solid var(--border-color)',
-    backgroundColor: 'var(--bg-shell)',
-    color: 'var(--text-primary)',
-    fontSize: '0.85rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.35rem',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.03)',
-  },
-  userProfile: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.75rem',
-    backgroundColor: 'var(--bg-shell)',
-    padding: '0.35rem 0.75rem',
-    borderRadius: '20px',
-    border: '1px solid var(--border-color)',
-  },
-  avatar: {
-    width: '32px',
-    height: '32px',
-    borderRadius: '50%',
-    backgroundColor: 'var(--primary-soft)',
-    color: 'var(--primary)',
-    fontWeight: '700',
-    fontSize: '0.9rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  userDetails: {
-    display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'left',
-  },
-  userName: {
-    fontSize: '0.85rem',
-    fontWeight: '700',
-    color: 'var(--text-primary)',
-    lineHeight: '1.2',
-  },
-  userRole: {
-    fontSize: '0.725rem',
-    color: 'var(--text-muted)',
-  },
-  logoutBtn: {
-    padding: '0.35rem 0.65rem',
-    backgroundColor: 'transparent',
-    color: 'var(--accent-red)',
-    border: '1px solid var(--accent-red)',
-    borderRadius: '12px',
-    fontSize: '0.75rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    marginLeft: '0.25rem',
-  },
-};
 
 export default TopNavbar;

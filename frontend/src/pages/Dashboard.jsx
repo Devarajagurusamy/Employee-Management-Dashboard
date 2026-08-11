@@ -13,6 +13,8 @@ import DepartmentChart from '../components/analytics/DepartmentChart';
 import MonthlyJoinedChart from '../components/analytics/MonthlyJoinedChart';
 import StatusDistributionChart from '../components/analytics/StatusDistributionChart';
 
+import AOS from 'aos';
+
 function Dashboard() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -45,6 +47,14 @@ function Dashboard() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      once: true,
+      easing: 'ease-in-out',
+    });
+  }, []);
 
   const fetchEmployeeList = async () => {
     setLoading(true);
@@ -89,12 +99,10 @@ function Dashboard() {
     fetchAnalytics();
   }, []);
 
-  // Reset page to 1 whenever search term or filter selection changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedDepartment, selectedStatus]);
 
-  // Derive unique available departments from current employee dataset or standard defaults
   const availableDepartments = useMemo(() => {
     const defaultDepts = ['Engineering', 'HR', 'Finance', 'Marketing', 'Sales', 'Operations'];
     const empDepts = employees
@@ -105,21 +113,17 @@ function Dashboard() {
     return combined.sort();
   }, [employees]);
 
-  // Derived filtered employees list (Search + Department + Status)
   const filteredEmployees = useMemo(() => {
     return employees.filter((emp) => {
-      // 1. Search term match (name or email, case-insensitive)
       const term = searchTerm.trim().toLowerCase();
       const matchesSearch =
         !term ||
         (emp.name && emp.name.toLowerCase().includes(term)) ||
         (emp.email && emp.email.toLowerCase().includes(term));
 
-      // 2. Department match
       const matchesDept =
         selectedDepartment === 'All' || emp.department === selectedDepartment;
 
-      // 3. Status match
       const matchesStatus =
         selectedStatus === 'All' || emp.status === selectedStatus;
 
@@ -127,17 +131,14 @@ function Dashboard() {
     });
   }, [employees, searchTerm, selectedDepartment, selectedStatus]);
 
-  // Calculate total pages for current filtered dataset
   const totalPages = Math.max(1, Math.ceil(filteredEmployees.length / pageSize));
 
-  // Boundary safety check: reset to last valid page if current page exceeds total pages (e.g. after deletion)
   useEffect(() => {
     if (currentPage > totalPages) {
       setCurrentPage(totalPages);
     }
   }, [currentPage, totalPages]);
 
-  // Derived paginated employee subset for current page view
   const paginatedEmployees = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
     return filteredEmployees.slice(startIndex, startIndex + pageSize);
@@ -155,7 +156,6 @@ function Dashboard() {
     setCurrentPage(1);
   };
 
-  // Form Handlers
   const handleAddEmployee = () => {
     setSelectedEmployee(null);
     setFormError('');
@@ -181,7 +181,6 @@ function Dashboard() {
 
     try {
       if (selectedEmployee) {
-        // Edit Mode
         const empId = selectedEmployee._id || selectedEmployee.id;
         const res = await employeeService.updateEmployee(empId, formData);
         if (res && res.success) {
@@ -192,18 +191,17 @@ function Dashboard() {
           );
           setIsFormOpen(false);
           setSelectedEmployee(null);
-          fetchAnalytics(); // Refresh global analytics
+          fetchAnalytics();
         } else {
           setFormError(res?.message || 'Failed to update employee.');
         }
       } else {
-        // Create Mode
         const res = await employeeService.createEmployee(formData);
         if (res && res.success) {
           setEmployees((prev) => [res.data, ...prev]);
           setIsFormOpen(false);
-          setCurrentPage(1); // Jump to first page so newly created employee is immediately visible
-          fetchAnalytics(); // Refresh global analytics
+          setCurrentPage(1);
+          fetchAnalytics();
         } else {
           setFormError(res?.message || 'Failed to create employee.');
         }
@@ -219,7 +217,6 @@ function Dashboard() {
     }
   };
 
-  // Delete Handlers
   const handleDeleteEmployee = (emp) => {
     setEmployeeToDelete(emp);
     setIsDeleteOpen(true);
@@ -244,7 +241,7 @@ function Dashboard() {
         );
         setIsDeleteOpen(false);
         setEmployeeToDelete(null);
-        fetchAnalytics(); // Refresh global analytics
+        fetchAnalytics();
       } else {
         alert(res?.message || 'Failed to delete employee.');
       }
@@ -258,34 +255,32 @@ function Dashboard() {
   };
 
   return (
-    <div style={styles.shellContainer}>
+    <div className="w-full max-w-[1400px] mx-auto py-2 px-1">
       {/* Top Navbar */}
       <TopNavbar activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Main Dashboard Application Surface */}
-      <div style={styles.mainSurface}>
+      {/* Main Shell Container */}
+      <div className="bg-white dark:bg-[#252526] rounded-3xl border border-slate-200 dark:border-[#3e3e42] p-6 sm:p-8 shadow-sm text-left transition-colors duration-200">
         {/* Welcome Header */}
-        <header style={styles.welcomeHeader}>
-          <div>
-            <h1 style={styles.welcomeTitle}>
-              Welcome back, {user?.name || 'Administrator'} 👋
-            </h1>
-            <p style={styles.welcomeSubtitle}>
-              Here is what's happening with your workforce management system today.
-            </p>
-          </div>
+        <header data-aos="fade-down" className="mb-6 pb-4 border-b border-slate-200 dark:border-[#3e3e42]">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight m-0">
+            Welcome back, {user?.name || 'Administrator'}
+          </h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Here is what's happening with your workforce management system today.
+          </p>
         </header>
 
-        {/* Global Analytics Section (Displayed on Dashboard and Analytics tab views) */}
+        {/* Global Analytics Section */}
         {(activeTab === 'Dashboard' || activeTab === 'Analytics') && (
-          <section style={styles.analyticsSection}>
+          <section className="mb-8">
             {analyticsLoading ? (
-              <div style={styles.stateContainer}>
-                <p style={{ color: 'var(--primary)', fontWeight: '600' }}>Loading analytics metrics...</p>
+              <div className="p-10 text-center bg-slate-50 dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42]">
+                <p className="text-[#007acc] font-semibold">Loading analytics metrics...</p>
               </div>
             ) : analyticsError ? (
-              <div style={styles.stateContainer}>
-                <p style={{ color: 'var(--accent-red)', fontWeight: '600' }}>{analyticsError}</p>
+              <div className="p-10 text-center bg-slate-50 dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42]">
+                <p className="text-rose-500 font-semibold">{analyticsError}</p>
               </div>
             ) : (
               <>
@@ -297,7 +292,7 @@ function Dashboard() {
                 />
 
                 {/* Charts Grid */}
-                <div style={styles.chartsGrid}>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                   <MonthlyJoinedChart data={analytics?.monthlyJoinedEmployees || []} />
                   <DepartmentChart data={analytics?.departmentWiseCount || []} />
                   <StatusDistributionChart data={analytics?.statusDistribution || []} />
@@ -307,13 +302,15 @@ function Dashboard() {
           </section>
         )}
 
-        {/* Employee Records Section (Displayed on Dashboard and Employees tab views) */}
+        {/* Employee Records Section */}
         {(activeTab === 'Dashboard' || activeTab === 'Employees') && (
-          <section style={{ marginTop: '2rem' }}>
-            <div style={styles.sectionHeaderRow}>
+          <section className="mt-6">
+            <div className="flex justify-between items-center mb-4">
               <div>
-                <h3 style={styles.sectionTitle}>Employee Records</h3>
-                <p style={styles.sectionSubtitle}>
+                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white m-0">
+                  Employee Records
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
                   Search, filter, manage, and view detailed workforce records
                 </p>
               </div>
@@ -382,70 +379,5 @@ function Dashboard() {
     </div>
   );
 }
-
-const styles = {
-  shellContainer: {
-    width: '100%',
-    margin: '0 auto',
-    padding: '0.5rem 0',
-  },
-  mainSurface: {
-    backgroundColor: 'var(--bg-shell)',
-    borderRadius: '24px',
-    border: '1px solid var(--border-color)',
-    padding: '2rem',
-    boxShadow: 'var(--card-shadow)',
-    textAlign: 'left',
-  },
-  welcomeHeader: {
-    marginBottom: '1.75rem',
-    paddingBottom: '1rem',
-    borderBottom: '1px solid var(--border-soft)',
-  },
-  welcomeTitle: {
-    margin: 0,
-    fontSize: '1.75rem',
-    fontWeight: '800',
-    color: 'var(--text-primary)',
-    letterSpacing: '-0.5px',
-  },
-  welcomeSubtitle: {
-    margin: '0.3rem 0 0 0',
-    fontSize: '0.925rem',
-    color: 'var(--text-secondary)',
-  },
-  analyticsSection: {
-    marginBottom: '2rem',
-  },
-  chartsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-    gap: '1.25rem',
-  },
-  sectionHeaderRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '1rem',
-  },
-  sectionTitle: {
-    margin: 0,
-    fontSize: '1.3rem',
-    fontWeight: '800',
-    color: 'var(--text-primary)',
-  },
-  sectionSubtitle: {
-    margin: '0.2rem 0 0 0',
-    fontSize: '0.85rem',
-    color: 'var(--text-secondary)',
-  },
-  stateContainer: {
-    padding: '2.5rem',
-    textAlign: 'center',
-    backgroundColor: 'var(--bg-card)',
-    borderRadius: '18px',
-    border: '1px solid var(--border-color)',
-  },
-};
 
 export default Dashboard;
