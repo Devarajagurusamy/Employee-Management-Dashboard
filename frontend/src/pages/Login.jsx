@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Sun, Moon, LogIn, AlertCircle } from 'lucide-react';
+import { Sun, Moon, LogIn, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 function Login() {
   const { login, isAuthenticated, loading: authLoading } = useAuth();
@@ -17,6 +17,7 @@ function Login() {
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   if (!authLoading && isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
@@ -145,18 +146,28 @@ function Login() {
             <label htmlFor="password" className="text-xs font-bold text-slate-600 dark:text-slate-300">
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter password"
-              className={`p-3 rounded-xl border bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none transition-colors ${
-                errors.password ? 'border-rose-500' : 'border-slate-200 dark:border-[#3e3e42] focus:border-[#007acc]'
-              }`}
-              disabled={isSubmitting}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter password"
+                className={`w-full p-3 pr-11 rounded-xl border bg-slate-100 dark:bg-[#1e1e1e] text-slate-900 dark:text-white text-sm outline-none transition-colors ${
+                  errors.password ? 'border-rose-500' : 'border-slate-200 dark:border-[#3e3e42] focus:border-[#007acc]'
+                }`}
+                disabled={isSubmitting}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+              </button>
+            </div>
             {errors.password && <span className="text-xs text-rose-500">{errors.password}</span>}
           </div>
 
