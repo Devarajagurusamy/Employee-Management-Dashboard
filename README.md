@@ -4,6 +4,14 @@ A modern, production-ready full-stack MERN application for organizational workfo
 
 ---
 
+## Deployed Application Links
+
+- 🌐 **Live Frontend (Vercel)**: [https://employee-management-dashboard-delta-jade.vercel.app](https://employee-management-dashboard-delta-jade.vercel.app)
+- ⚙️ **Live Backend API (Render)**: [https://api-employee-management-dashboard.onrender.com](https://api-employee-management-dashboard.onrender.com)
+- 💚 **Backend Health Check**: [https://api-employee-management-dashboard.onrender.com/api/health](https://api-employee-management-dashboard.onrender.com/api/health)
+
+---
+
 ## Key Features
 
 - **Authentication & Security**:
@@ -40,7 +48,7 @@ A modern, production-ready full-stack MERN application for organizational workfo
 ## Tech Stack
 
 - **Frontend**: React 18, Vite, Tailwind CSS, Lucide Icons, Recharts, AOS Animations, Axios, React Router v6.
-- **Backend**: Node.js, Express.js, MongoDB Atlas / Local MongoDB, Mongoose ODM, JSON Web Token (JWT), BCryptJS, CORS, Dotenv.
+- **Backend**: Node.js, Express.js, MongoDB Atlas, Mongoose ODM, JSON Web Token (JWT), BCryptJS, CORS, Dotenv.
 
 ---
 
@@ -49,13 +57,14 @@ A modern, production-ready full-stack MERN application for organizational workfo
 ### Backend (`backend/.env`)
 ```env
 PORT=5000
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/employee_dashboard?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://devarajaguru2002_db_user:2xiPZYfKdZKcop25@cluster0.3yzkji2.mongodb.net/employee_management?retryWrites=true&w=majority
 JWT_SECRET=your_super_secret_jwt_key_here
+CLIENT_URL=http://localhost:5173,https://employee-management-dashboard-delta-jade.vercel.app
 ```
 
 ### Frontend (`frontend/.env`)
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=https://api-employee-management-dashboard.onrender.com/api
 ```
 
 ---
@@ -67,7 +76,7 @@ VITE_API_URL=http://localhost:5000/api
 - npm or yarn
 - MongoDB Atlas account or local MongoDB instance
 
-### 1. Clone & Install Dependencies
+### 1. Install Dependencies
 
 ```bash
 # Install backend dependencies
@@ -79,10 +88,7 @@ cd ../frontend
 npm install
 ```
 
-### 2. Configure Environment Variables
-Create `.env` files in both `backend/` and `frontend/` folders using `.env.example` as a template.
-
-### 3. Start Development Servers
+### 2. Start Development Servers
 
 ```bash
 # Start backend server (Port 5000)
@@ -102,18 +108,6 @@ Visit `http://localhost:5173` in your browser.
 
 - **Email**: `admin@example.com`
 - **Password**: `password123`
-
----
-
-## Production Build
-
-```bash
-# Build frontend production bundle
-cd frontend
-npm run build
-```
-
-The production assets will be compiled to `frontend/dist/`.
 
 ---
 
