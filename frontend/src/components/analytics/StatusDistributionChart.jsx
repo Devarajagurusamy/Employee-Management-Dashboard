@@ -7,13 +7,16 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { useTheme } from '../../context/ThemeContext';
 
 const STATUS_COLORS = {
-  Active: '#51cf66',
-  Inactive: '#ff922b',
+  Active: '#10B981',
+  Inactive: '#F59E0B',
 };
 
 function StatusDistributionChart({ data = [] }) {
+  const { theme } = useTheme();
+
   if (!data || data.length === 0 || data.every((d) => d.count === 0)) {
     return (
       <div style={styles.chartContainer}>
@@ -29,8 +32,11 @@ function StatusDistributionChart({ data = [] }) {
 
   return (
     <div style={styles.chartContainer}>
-      <h4 style={styles.chartTitle}>Employee Status Distribution</h4>
-      <div style={{ width: '100%', height: 260 }}>
+      <div style={styles.headerRow}>
+        <h4 style={styles.chartTitle}>Status Distribution</h4>
+        <span style={styles.subBadge}>Workforce Status</span>
+      </div>
+      <div style={{ width: '100%', height: 250 }}>
         <ResponsiveContainer>
           <PieChart>
             <Pie
@@ -47,22 +53,23 @@ function StatusDistributionChart({ data = [] }) {
               {validData.map((entry) => (
                 <Cell
                   key={entry.status}
-                  fill={STATUS_COLORS[entry.status] || '#4c6ef5'}
+                  fill={STATUS_COLORS[entry.status] || '#155EEF'}
                 />
               ))}
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: '#25262b',
-                borderColor: '#333',
-                borderRadius: '8px',
-                color: '#fff',
+                backgroundColor: theme === 'light' ? '#FFFFFF' : '#1E293B',
+                borderColor: theme === 'light' ? '#E2E8F0' : '#334155',
+                borderRadius: '12px',
+                color: theme === 'light' ? '#0F172A' : '#F8FAFC',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
               }}
             />
             <Legend
               verticalAlign="bottom"
               height={36}
-              wrapperStyle={{ color: '#aaa', fontSize: '0.85rem' }}
+              wrapperStyle={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}
             />
           </PieChart>
         </ResponsiveContainer>
@@ -73,27 +80,41 @@ function StatusDistributionChart({ data = [] }) {
 
 const styles = {
   chartContainer: {
-    backgroundColor: '#1e1e1e',
-    borderRadius: '10px',
-    border: '1px solid #333',
-    padding: '1.25rem',
-    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
+    backgroundColor: 'var(--bg-card)',
+    borderRadius: '18px',
+    border: '1px solid var(--border-color)',
+    padding: '1.35rem',
+    boxShadow: 'var(--card-shadow)',
     textAlign: 'left',
   },
+  headerRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '1rem',
+  },
   chartTitle: {
-    margin: '0 0 1rem 0',
+    margin: 0,
     fontSize: '1rem',
+    fontWeight: '700',
+    color: 'var(--text-primary)',
+  },
+  subBadge: {
+    fontSize: '0.75rem',
     fontWeight: '600',
-    color: '#fff',
+    color: 'var(--primary)',
+    backgroundColor: 'var(--primary-soft)',
+    padding: '0.25rem 0.6rem',
+    borderRadius: '12px',
   },
   emptyContainer: {
-    height: 260,
+    height: 250,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
   emptyText: {
-    color: '#777',
+    color: 'var(--text-muted)',
     fontSize: '0.9rem',
   },
 };

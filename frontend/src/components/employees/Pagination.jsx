@@ -38,9 +38,9 @@ function Pagination({
     <div style={styles.container}>
       {/* Pagination Info */}
       <div style={styles.info}>
-        Showing <strong style={{ color: '#fff' }}>{startItem}</strong>–
-        <strong style={{ color: '#fff' }}>{endItem}</strong> of{' '}
-        <strong style={{ color: '#fff' }}>{totalItems}</strong> employees
+        Showing <strong style={{ color: 'var(--text-primary)' }}>{startItem}</strong>–
+        <strong style={{ color: 'var(--text-primary)' }}>{endItem}</strong> of{' '}
+        <strong style={{ color: 'var(--text-primary)' }}>{totalItems}</strong> employees
       </div>
 
       {/* Pagination Controls */}
@@ -132,16 +132,17 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: '1.25rem',
-    padding: '0.75rem 1rem',
-    backgroundColor: '#1e1e1e',
-    borderRadius: '8px',
-    border: '1px solid #333',
+    padding: '0.75rem 1.25rem',
+    backgroundColor: 'var(--bg-card)',
+    borderRadius: '16px',
+    border: '1px solid var(--border-color)',
     flexWrap: 'wrap',
     gap: '1rem',
+    boxShadow: 'var(--card-shadow)',
   },
   info: {
     fontSize: '0.875rem',
-    color: '#aaa',
+    color: 'var(--text-secondary)',
   },
   controls: {
     display: 'flex',
@@ -151,41 +152,39 @@ const styles = {
   },
   btn: {
     padding: '0.45rem 0.85rem',
-    backgroundColor: '#2a2a2a',
-    color: '#fff',
-    border: '1px solid #333',
-    borderRadius: '6px',
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--text-primary)',
+    border: '1px solid var(--border-color)',
+    borderRadius: '10px',
     fontSize: '0.85rem',
-    fontWeight: '500',
+    fontWeight: '600',
     cursor: 'pointer',
-    transition: 'background-color 0.15s',
   },
   btnDisabled: {
     opacity: 0.4,
     cursor: 'not-allowed',
-    backgroundColor: '#1e1e1e',
-    color: '#666',
-    borderColor: '#2a2a2a',
+    color: 'var(--text-muted)',
   },
   pageBtn: {
     padding: '0.45rem 0.75rem',
-    backgroundColor: '#2a2a2a',
-    color: '#ccc',
-    border: '1px solid #333',
-    borderRadius: '6px',
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--text-secondary)',
+    border: '1px solid var(--border-color)',
+    borderRadius: '10px',
     fontSize: '0.85rem',
-    fontWeight: '500',
+    fontWeight: '600',
     cursor: 'pointer',
     minWidth: '36px',
   },
   pageBtnActive: {
-    backgroundColor: '#4c6ef5',
-    color: '#ffffff',
-    borderColor: '#4c6ef5',
+    backgroundColor: 'var(--primary)',
+    color: '#FFFFFF',
+    borderColor: 'var(--primary)',
     fontWeight: '700',
+    boxShadow: '0 2px 8px rgba(21, 94, 239, 0.3)',
   },
   ellipsis: {
-    color: '#666',
+    color: 'var(--text-muted)',
     padding: '0 0.25rem',
     fontSize: '0.9rem',
   },

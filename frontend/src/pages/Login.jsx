@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 function Login() {
   const { login, isAuthenticated, loading: authLoading } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -69,9 +71,23 @@ function Login() {
 
   return (
     <div style={styles.container}>
+      {/* Theme Toggle Pill */}
+      <div style={styles.themePosition}>
+        <button onClick={toggleTheme} style={styles.themeToggleBtn} type="button">
+          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+        </button>
+      </div>
+
       <div style={styles.card}>
+        <div style={styles.brandHeader}>
+          <div style={styles.logoBadge}>
+            <div style={styles.logoIcon}></div>
+            <span style={styles.logoText}>EMD</span>
+          </div>
+        </div>
+
         <h2 style={styles.title}>Employee Management Login</h2>
-        <p style={styles.subtitle}>Enter your credentials to access the dashboard</p>
+        <p style={styles.subtitle}>Enter your admin credentials to access the dashboard</p>
 
         {apiError && <div style={styles.alertError}>{apiError}</div>}
 
@@ -89,7 +105,7 @@ function Login() {
               placeholder="e.g. admin@example.com"
               style={{
                 ...styles.input,
-                borderColor: errors.email ? '#ff6b6b' : '#333',
+                borderColor: errors.email ? 'var(--accent-red)' : 'var(--border-color)',
               }}
               disabled={isSubmitting}
             />
@@ -109,7 +125,7 @@ function Login() {
               placeholder="Enter password"
               style={{
                 ...styles.input,
-                borderColor: errors.password ? '#ff6b6b' : '#333',
+                borderColor: errors.password ? 'var(--accent-red)' : 'var(--border-color)',
               }}
               disabled={isSubmitting}
             />
@@ -125,12 +141,14 @@ function Login() {
             }}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Logging in...' : 'Login'}
+            {isSubmitting ? 'Logging in...' : 'Sign In to Dashboard'}
           </button>
         </form>
 
         <div style={styles.demoCredentials}>
-          <p style={{ margin: '0 0 0.5rem 0', fontWeight: '600' }}>Demo Test Credentials:</p>
+          <p style={{ margin: '0 0 0.5rem 0', fontWeight: '700', color: 'var(--text-primary)' }}>
+            Demo Test Credentials:
+          </p>
           <code style={styles.code}>admin@example.com / password123</code>
         </div>
       </div>
@@ -143,36 +161,76 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: '75vh',
+    minHeight: '85vh',
+    position: 'relative',
+    width: '100%',
+  },
+  themePosition: {
+    position: 'absolute',
+    top: '1rem',
+    right: '1rem',
+  },
+  themeToggleBtn: {
+    padding: '0.45rem 0.85rem',
+    borderRadius: '16px',
+    border: '1px solid var(--border-color)',
+    backgroundColor: 'var(--bg-card)',
+    color: 'var(--text-primary)',
+    fontSize: '0.85rem',
+    fontWeight: '600',
+    cursor: 'pointer',
   },
   card: {
     width: '100%',
-    maxWidth: '420px',
+    maxWidth: '440px',
     padding: '2.5rem',
-    borderRadius: '12px',
-    backgroundColor: '#1e1e1e',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+    borderRadius: '24px',
+    backgroundColor: 'var(--bg-card)',
+    boxShadow: 'var(--card-shadow)',
     textAlign: 'left',
-    border: '1px solid #333',
+    border: '1px solid var(--border-color)',
+  },
+  brandHeader: {
+    marginBottom: '1.5rem',
+  },
+  logoBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    backgroundColor: 'var(--bg-input)',
+    padding: '0.4rem 0.85rem',
+    borderRadius: '20px',
+    border: '1px solid var(--border-color)',
+  },
+  logoIcon: {
+    width: '18px',
+    height: '18px',
+    borderRadius: '50%',
+    background: 'linear-gradient(135deg, #155EEF 50%, #0284C7 50%)',
+  },
+  logoText: {
+    fontWeight: '800',
+    fontSize: '1rem',
+    color: 'var(--text-primary)',
   },
   title: {
     margin: '0 0 0.5rem 0',
-    fontSize: '1.5rem',
-    fontWeight: '700',
-    color: '#ffffff',
+    fontSize: '1.6rem',
+    fontWeight: '800',
+    color: 'var(--text-primary)',
   },
   subtitle: {
     margin: '0 0 1.5rem 0',
     fontSize: '0.9rem',
-    color: '#888',
+    color: 'var(--text-secondary)',
   },
   alertError: {
     padding: '0.75rem 1rem',
     marginBottom: '1rem',
-    backgroundColor: 'rgba(255, 107, 107, 0.15)',
-    border: '1px solid #ff6b6b',
-    borderRadius: '6px',
-    color: '#ff6b6b',
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    border: '1px solid var(--accent-red)',
+    borderRadius: '10px',
+    color: 'var(--accent-red)',
     fontSize: '0.875rem',
   },
   form: {
@@ -187,44 +245,46 @@ const styles = {
   },
   label: {
     fontSize: '0.875rem',
-    fontWeight: '500',
-    color: '#ccc',
+    fontWeight: '600',
+    color: 'var(--text-secondary)',
   },
   input: {
     padding: '0.75rem 1rem',
-    borderRadius: '6px',
-    border: '1px solid #333',
-    backgroundColor: '#2a2a2a',
-    color: '#fff',
+    borderRadius: '12px',
+    border: '1px solid var(--border-color)',
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--text-primary)',
     fontSize: '0.95rem',
     outline: 'none',
   },
   errorText: {
-    color: '#ff6b6b',
+    color: 'var(--accent-red)',
     fontSize: '0.8rem',
   },
   button: {
     padding: '0.85rem',
-    borderRadius: '6px',
+    borderRadius: '12px',
     border: 'none',
-    backgroundColor: '#4c6ef5',
+    backgroundColor: 'var(--primary)',
     color: '#ffffff',
     fontSize: '1rem',
-    fontWeight: '600',
-    transition: 'background-color 0.2s',
+    fontWeight: '700',
+    boxShadow: '0 4px 12px rgba(21, 94, 239, 0.3)',
+    cursor: 'pointer',
   },
   demoCredentials: {
-    marginTop: '1.5rem',
-    padding: '0.75rem',
-    backgroundColor: '#25262b',
-    borderRadius: '6px',
-    border: '1px solid #373a40',
+    marginTop: '1.75rem',
+    padding: '0.85rem',
+    backgroundColor: 'var(--bg-card-muted)',
+    borderRadius: '12px',
+    border: '1px solid var(--border-color)',
     fontSize: '0.825rem',
-    color: '#aaa',
+    color: 'var(--text-secondary)',
   },
   code: {
-    color: '#51cf66',
+    color: 'var(--accent-green)',
     fontFamily: 'monospace',
+    fontWeight: '700',
   },
 };
 

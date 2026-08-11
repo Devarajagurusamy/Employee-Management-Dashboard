@@ -9,10 +9,10 @@ function DeleteConfirmation({ isOpen, onClose, onConfirm, employeeName, isDeleti
         <h3 style={styles.title}>Confirm Delete</h3>
         <p style={styles.text}>
           Are you sure you want to delete employee{' '}
-          <strong style={{ color: '#fff' }}>"{employeeName}"</strong>?
+          <strong style={{ color: 'var(--text-primary)' }}>"{employeeName}"</strong>?
         </p>
         <p style={styles.warning}>
-          This action will permanently remove the employee record.
+          This action will permanently remove the employee record from MongoDB.
         </p>
 
         <div style={styles.actions}>
@@ -49,7 +49,8 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(15, 23, 42, 0.65)',
+    backdropFilter: 'blur(10px)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -57,30 +58,30 @@ const styles = {
     padding: '1rem',
   },
   modal: {
-    backgroundColor: '#1e1e1e',
-    borderRadius: '10px',
-    border: '1px solid #333',
+    backgroundColor: 'var(--bg-card)',
+    borderRadius: '20px',
+    border: '1px solid var(--border-color)',
     width: '100%',
     maxWidth: '440px',
     padding: '1.75rem',
-    boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+    boxShadow: 'var(--card-shadow)',
     textAlign: 'left',
   },
   title: {
     margin: '0 0 0.75rem 0',
     fontSize: '1.2rem',
-    fontWeight: '700',
-    color: '#ff6b6b',
+    fontWeight: '800',
+    color: 'var(--accent-red)',
   },
   text: {
     margin: '0 0 0.5rem 0',
     fontSize: '0.95rem',
-    color: '#ccc',
+    color: 'var(--text-secondary)',
   },
   warning: {
     margin: '0 0 1.5rem 0',
     fontSize: '0.85rem',
-    color: '#888',
+    color: 'var(--text-muted)',
   },
   actions: {
     display: 'flex',
@@ -89,22 +90,23 @@ const styles = {
   },
   cancelBtn: {
     padding: '0.6rem 1.25rem',
-    backgroundColor: '#333',
-    color: '#ccc',
-    border: '1px solid #444',
-    borderRadius: '6px',
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--text-secondary)',
+    border: '1px solid var(--border-color)',
+    borderRadius: '12px',
     fontSize: '0.9rem',
-    fontWeight: '500',
+    fontWeight: '600',
     cursor: 'pointer',
   },
   deleteBtn: {
     padding: '0.6rem 1.25rem',
-    backgroundColor: '#e03131',
-    color: '#fff',
+    backgroundColor: 'var(--accent-red)',
+    color: '#FFFFFF',
     border: 'none',
-    borderRadius: '6px',
+    borderRadius: '12px',
     fontSize: '0.9rem',
-    fontWeight: '600',
+    fontWeight: '700',
+    boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
   },
 };
 

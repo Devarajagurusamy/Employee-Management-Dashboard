@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import * as employeeService from '../services/employeeService';
+import TopNavbar from '../components/layout/TopNavbar';
 import EmployeeTable from '../components/employees/EmployeeTable';
 import EmployeeForm from '../components/employees/EmployeeForm';
 import DeleteConfirmation from '../components/employees/DeleteConfirmation';
@@ -13,7 +14,8 @@ import MonthlyJoinedChart from '../components/analytics/MonthlyJoinedChart';
 import StatusDistributionChart from '../components/analytics/StatusDistributionChart';
 
 function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState('Dashboard');
 
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -256,106 +258,108 @@ function Dashboard() {
   };
 
   return (
-    <div style={styles.container}>
-      {/* Top Navbar / Header */}
-      <header style={styles.header}>
-        <div>
-          <h2 style={styles.appTitle}>Employee Management Dashboard</h2>
-          <p style={styles.userInfo}>
-            Logged in as <strong>{user?.name || user?.email}</strong> ({user?.email})
-          </p>
-        </div>
-        <button onClick={logout} style={styles.logoutBtn}>
-          Logout
-        </button>
-      </header>
+    <div style={styles.shellContainer}>
+      {/* Top Navbar */}
+      <TopNavbar activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Global Analytics Section */}
-      <section style={styles.analyticsSection}>
-        <div style={styles.sectionHeader}>
-          <h3 style={styles.sectionTitle}>System Analytics & Metrics</h3>
-          <p style={styles.sectionSubtitle}>
-            Real-time organizational insights calculated from MongoDB dataset
-          </p>
-        </div>
+      {/* Main Dashboard Application Surface */}
+      <div style={styles.mainSurface}>
+        {/* Welcome Header */}
+        <header style={styles.welcomeHeader}>
+          <div>
+            <h1 style={styles.welcomeTitle}>
+              Welcome back, {user?.name || 'Administrator'} 👋
+            </h1>
+            <p style={styles.welcomeSubtitle}>
+              Here is what's happening with your workforce management system today.
+            </p>
+          </div>
+        </header>
 
-        {analyticsLoading ? (
-          <div style={styles.stateContainer}>
-            <p style={{ color: '#4c6ef5', fontWeight: '500' }}>Loading analytics...</p>
-          </div>
-        ) : analyticsError ? (
-          <div style={styles.stateContainer}>
-            <p style={{ color: '#ff6b6b', fontWeight: '500' }}>{analyticsError}</p>
-          </div>
-        ) : (
-          <>
-            {/* KPI Summary Cards */}
-            <AnalyticsCards
-              totalEmployees={analytics?.totalEmployees || 0}
-              activeEmployees={analytics?.activeEmployees || 0}
-              inactiveEmployees={analytics?.inactiveEmployees || 0}
+        {/* Global Analytics Section (Displayed on Dashboard and Analytics tab views) */}
+        {(activeTab === 'Dashboard' || activeTab === 'Analytics') && (
+          <section style={styles.analyticsSection}>
+            {analyticsLoading ? (
+              <div style={styles.stateContainer}>
+                <p style={{ color: 'var(--primary)', fontWeight: '600' }}>Loading analytics metrics...</p>
+              </div>
+            ) : analyticsError ? (
+              <div style={styles.stateContainer}>
+                <p style={{ color: 'var(--accent-red)', fontWeight: '600' }}>{analyticsError}</p>
+              </div>
+            ) : (
+              <>
+                {/* KPI Summary Cards */}
+                <AnalyticsCards
+                  totalEmployees={analytics?.totalEmployees || 0}
+                  activeEmployees={analytics?.activeEmployees || 0}
+                  inactiveEmployees={analytics?.inactiveEmployees || 0}
+                />
+
+                {/* Charts Grid */}
+                <div style={styles.chartsGrid}>
+                  <MonthlyJoinedChart data={analytics?.monthlyJoinedEmployees || []} />
+                  <DepartmentChart data={analytics?.departmentWiseCount || []} />
+                  <StatusDistributionChart data={analytics?.statusDistribution || []} />
+                </div>
+              </>
+            )}
+          </section>
+        )}
+
+        {/* Employee Records Section (Displayed on Dashboard and Employees tab views) */}
+        {(activeTab === 'Dashboard' || activeTab === 'Employees') && (
+          <section style={{ marginTop: '2rem' }}>
+            <div style={styles.sectionHeaderRow}>
+              <div>
+                <h3 style={styles.sectionTitle}>Employee Records</h3>
+                <p style={styles.sectionSubtitle}>
+                  Search, filter, manage, and view detailed workforce records
+                </p>
+              </div>
+            </div>
+
+            {/* Search & Filter Controls Component */}
+            <EmployeeFilters
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              selectedDepartment={selectedDepartment}
+              onDepartmentChange={setSelectedDepartment}
+              selectedStatus={selectedStatus}
+              onStatusChange={setSelectedStatus}
+              departments={availableDepartments}
+              onClearFilters={handleClearFilters}
+              hasActiveFilters={hasActiveFilters}
+              onAddEmployee={handleAddEmployee}
             />
 
-            {/* Charts Grid */}
-            <div style={styles.chartsGrid}>
-              <DepartmentChart data={analytics?.departmentWiseCount || []} />
-              <MonthlyJoinedChart data={analytics?.monthlyJoinedEmployees || []} />
-              <StatusDistributionChart data={analytics?.statusDistribution || []} />
-            </div>
-          </>
-        )}
-      </section>
+            {/* Main Table Component */}
+            <main>
+              <EmployeeTable
+                employees={paginatedEmployees}
+                loading={loading}
+                error={error}
+                onEdit={handleEditEmployee}
+                onDelete={handleDeleteEmployee}
+                onRetry={fetchEmployeeList}
+                isFiltered={hasActiveFilters}
+                onClearFilters={handleClearFilters}
+              />
 
-      {/* Action Bar for Employee Table */}
-      <div style={styles.actionBar}>
-        <div>
-          <h3 style={styles.sectionTitle}>Employee Records</h3>
-          <p style={styles.sectionSubtitle}>
-            Manage team members, search, filter, and navigate employee records
-          </p>
-        </div>
-        <button onClick={handleAddEmployee} style={styles.addBtn}>
-          + Add Employee
-        </button>
+              {/* Pagination Controls */}
+              {!loading && !error && filteredEmployees.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  totalItems={filteredEmployees.length}
+                  pageSize={pageSize}
+                  onPageChange={setCurrentPage}
+                />
+              )}
+            </main>
+          </section>
+        )}
       </div>
-
-      {/* Search & Filter Controls Component */}
-      <EmployeeFilters
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        selectedDepartment={selectedDepartment}
-        onDepartmentChange={setSelectedDepartment}
-        selectedStatus={selectedStatus}
-        onStatusChange={setSelectedStatus}
-        departments={availableDepartments}
-        onClearFilters={handleClearFilters}
-        hasActiveFilters={hasActiveFilters}
-      />
-
-      {/* Main Table Component */}
-      <main>
-        <EmployeeTable
-          employees={paginatedEmployees}
-          loading={loading}
-          error={error}
-          onEdit={handleEditEmployee}
-          onDelete={handleDeleteEmployee}
-          onRetry={fetchEmployeeList}
-          isFiltered={hasActiveFilters}
-          onClearFilters={handleClearFilters}
-        />
-
-        {/* Pagination Controls */}
-        {!loading && !error && filteredEmployees.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={filteredEmployees.length}
-            pageSize={pageSize}
-            onPageChange={setCurrentPage}
-          />
-        )}
-      </main>
 
       {/* Reusable Employee Form Modal */}
       <EmployeeForm
@@ -380,89 +384,67 @@ function Dashboard() {
 }
 
 const styles = {
-  container: {
-    padding: '1.5rem',
-    maxWidth: '1200px',
+  shellContainer: {
+    width: '100%',
     margin: '0 auto',
+    padding: '0.5rem 0',
+  },
+  mainSurface: {
+    backgroundColor: 'var(--bg-shell)',
+    borderRadius: '24px',
+    border: '1px solid var(--border-color)',
+    padding: '2rem',
+    boxShadow: 'var(--card-shadow)',
     textAlign: 'left',
   },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '1.5rem',
+  welcomeHeader: {
+    marginBottom: '1.75rem',
     paddingBottom: '1rem',
-    borderBottom: '1px solid #333',
+    borderBottom: '1px solid var(--border-soft)',
   },
-  appTitle: {
+  welcomeTitle: {
     margin: 0,
-    fontSize: '1.6rem',
-    color: '#fff',
-    fontWeight: '700',
+    fontSize: '1.75rem',
+    fontWeight: '800',
+    color: 'var(--text-primary)',
+    letterSpacing: '-0.5px',
   },
-  userInfo: {
-    margin: '0.25rem 0 0 0',
-    fontSize: '0.875rem',
-    color: '#aaa',
-  },
-  logoutBtn: {
-    padding: '0.55rem 1.1rem',
-    backgroundColor: 'transparent',
-    color: '#ff6b6b',
-    border: '1px solid #ff6b6b',
-    borderRadius: '6px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    fontSize: '0.875rem',
-    transition: 'background 0.2s',
+  welcomeSubtitle: {
+    margin: '0.3rem 0 0 0',
+    fontSize: '0.925rem',
+    color: 'var(--text-secondary)',
   },
   analyticsSection: {
     marginBottom: '2rem',
-  },
-  sectionHeader: {
-    marginBottom: '1rem',
-  },
-  sectionTitle: {
-    margin: 0,
-    fontSize: '1.25rem',
-    color: '#fff',
-    fontWeight: '600',
-  },
-  sectionSubtitle: {
-    margin: '0.2rem 0 0 0',
-    fontSize: '0.85rem',
-    color: '#777',
   },
   chartsGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
     gap: '1.25rem',
   },
-  actionBar: {
+  sectionHeaderRow: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '1.25rem',
-    flexWrap: 'wrap',
-    gap: '1rem',
+    marginBottom: '1rem',
   },
-  addBtn: {
-    padding: '0.65rem 1.25rem',
-    backgroundColor: '#4c6ef5',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '6px',
-    fontWeight: '600',
-    fontSize: '0.9rem',
-    cursor: 'pointer',
-    boxShadow: '0 2px 8px rgba(76, 110, 245, 0.3)',
+  sectionTitle: {
+    margin: 0,
+    fontSize: '1.3rem',
+    fontWeight: '800',
+    color: 'var(--text-primary)',
+  },
+  sectionSubtitle: {
+    margin: '0.2rem 0 0 0',
+    fontSize: '0.85rem',
+    color: 'var(--text-secondary)',
   },
   stateContainer: {
     padding: '2.5rem',
     textAlign: 'center',
-    backgroundColor: '#1e1e1e',
-    borderRadius: '8px',
-    border: '1px solid #333',
+    backgroundColor: 'var(--bg-card)',
+    borderRadius: '18px',
+    border: '1px solid var(--border-color)',
   },
 };
 

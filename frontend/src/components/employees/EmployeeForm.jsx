@@ -105,7 +105,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
       <div style={styles.modal}>
         <div style={styles.header}>
           <h3 style={styles.title}>
-            {isEditMode ? 'Edit Employee' : 'Add New Employee'}
+            {isEditMode ? 'Edit Employee Record' : 'Add New Employee'}
           </h3>
           <button onClick={onClose} style={styles.closeBtn} disabled={isSubmitting}>
             &times;
@@ -126,7 +126,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
                 placeholder="e.g. John Doe"
                 style={{
                   ...styles.input,
-                  borderColor: errors.name ? '#ff6b6b' : '#333',
+                  borderColor: errors.name ? 'var(--accent-red)' : 'var(--border-color)',
                 }}
                 disabled={isSubmitting}
               />
@@ -143,7 +143,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
                 placeholder="e.g. john@example.com"
                 style={{
                   ...styles.input,
-                  borderColor: errors.email ? '#ff6b6b' : '#333',
+                  borderColor: errors.email ? 'var(--accent-red)' : 'var(--border-color)',
                 }}
                 disabled={isSubmitting}
               />
@@ -162,7 +162,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
                 placeholder="e.g. Engineering"
                 style={{
                   ...styles.input,
-                  borderColor: errors.department ? '#ff6b6b' : '#333',
+                  borderColor: errors.department ? 'var(--accent-red)' : 'var(--border-color)',
                 }}
                 disabled={isSubmitting}
               />
@@ -181,7 +181,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
                 placeholder="e.g. Software Engineer"
                 style={{
                   ...styles.input,
-                  borderColor: errors.designation ? '#ff6b6b' : '#333',
+                  borderColor: errors.designation ? 'var(--accent-red)' : 'var(--border-color)',
                 }}
                 disabled={isSubmitting}
               />
@@ -200,7 +200,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
                 onChange={handleChange}
                 style={{
                   ...styles.select,
-                  borderColor: errors.status ? '#ff6b6b' : '#333',
+                  borderColor: errors.status ? 'var(--accent-red)' : 'var(--border-color)',
                 }}
                 disabled={isSubmitting}
               >
@@ -219,7 +219,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
                 onChange={handleChange}
                 style={{
                   ...styles.input,
-                  borderColor: errors.joiningDate ? '#ff6b6b' : '#333',
+                  borderColor: errors.joiningDate ? 'var(--accent-red)' : 'var(--border-color)',
                 }}
                 disabled={isSubmitting}
               />
@@ -269,7 +269,8 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(15, 23, 42, 0.65)',
+    backdropFilter: 'blur(10px)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -277,13 +278,13 @@ const styles = {
     padding: '1rem',
   },
   modal: {
-    backgroundColor: '#1e1e1e',
-    borderRadius: '10px',
-    border: '1px solid #333',
+    backgroundColor: 'var(--bg-card)',
+    borderRadius: '20px',
+    border: '1px solid var(--border-color)',
     width: '100%',
     maxWidth: '560px',
     padding: '1.75rem',
-    boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+    boxShadow: 'var(--card-shadow)',
     textAlign: 'left',
   },
   header: {
@@ -292,18 +293,18 @@ const styles = {
     alignItems: 'center',
     marginBottom: '1.25rem',
     paddingBottom: '0.75rem',
-    borderBottom: '1px solid #333',
+    borderBottom: '1px solid var(--border-color)',
   },
   title: {
     margin: 0,
     fontSize: '1.25rem',
-    fontWeight: '700',
-    color: '#fff',
+    fontWeight: '800',
+    color: 'var(--text-primary)',
   },
   closeBtn: {
     background: 'none',
     border: 'none',
-    color: '#aaa',
+    color: 'var(--text-muted)',
     fontSize: '1.5rem',
     cursor: 'pointer',
     lineHeight: '1',
@@ -311,10 +312,10 @@ const styles = {
   alertError: {
     padding: '0.65rem 0.85rem',
     marginBottom: '1.25rem',
-    backgroundColor: 'rgba(255, 107, 107, 0.15)',
-    border: '1px solid #ff6b6b',
-    borderRadius: '6px',
-    color: '#ff6b6b',
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    border: '1px solid var(--accent-red)',
+    borderRadius: '10px',
+    color: 'var(--accent-red)',
     fontSize: '0.85rem',
   },
   form: {
@@ -335,29 +336,29 @@ const styles = {
   },
   label: {
     fontSize: '0.825rem',
-    fontWeight: '500',
-    color: '#bbb',
+    fontWeight: '600',
+    color: 'var(--text-secondary)',
   },
   input: {
     padding: '0.65rem 0.85rem',
-    borderRadius: '6px',
-    border: '1px solid #333',
-    backgroundColor: '#2a2a2a',
-    color: '#fff',
+    borderRadius: '10px',
+    border: '1px solid var(--border-color)',
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--text-primary)',
     fontSize: '0.9rem',
     outline: 'none',
   },
   select: {
     padding: '0.65rem 0.85rem',
-    borderRadius: '6px',
-    border: '1px solid #333',
-    backgroundColor: '#2a2a2a',
-    color: '#fff',
+    borderRadius: '10px',
+    border: '1px solid var(--border-color)',
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--text-primary)',
     fontSize: '0.9rem',
     outline: 'none',
   },
   errorText: {
-    color: '#ff6b6b',
+    color: 'var(--accent-red)',
     fontSize: '0.75rem',
   },
   actions: {
@@ -366,26 +367,27 @@ const styles = {
     gap: '0.75rem',
     marginTop: '1rem',
     paddingTop: '1rem',
-    borderTop: '1px solid #2a2a2a',
+    borderTop: '1px solid var(--border-soft)',
   },
   cancelBtn: {
     padding: '0.6rem 1.25rem',
-    backgroundColor: '#333',
-    color: '#ccc',
-    border: '1px solid #444',
-    borderRadius: '6px',
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--text-secondary)',
+    border: '1px solid var(--border-color)',
+    borderRadius: '12px',
     fontSize: '0.9rem',
-    fontWeight: '500',
+    fontWeight: '600',
     cursor: 'pointer',
   },
   submitBtn: {
     padding: '0.6rem 1.25rem',
-    backgroundColor: '#4c6ef5',
-    color: '#fff',
+    backgroundColor: 'var(--primary)',
+    color: '#FFFFFF',
     border: 'none',
-    borderRadius: '6px',
+    borderRadius: '12px',
     fontSize: '0.9rem',
-    fontWeight: '600',
+    fontWeight: '700',
+    boxShadow: '0 4px 12px rgba(21, 94, 239, 0.3)',
   },
 };
 
