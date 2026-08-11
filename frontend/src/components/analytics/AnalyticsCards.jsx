@@ -5,7 +5,7 @@ function AnalyticsCards({ totalEmployees = 0, activeEmployees = 0, inactiveEmplo
   const activePercentage = totalEmployees > 0 ? Math.round((activeEmployees / totalEmployees) * 100) : 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5 mb-6">
       {/* Total Employees Card (Solid Crisp Blue #007acc) */}
       <div
         data-aos="fade-up"

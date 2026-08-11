@@ -95,7 +95,7 @@ function Login() {
 
       <div
         data-aos="fade-up"
-        className="w-full max-w-md p-8 rounded-3xl bg-white dark:bg-[#252526] border border-slate-200 dark:border-[#3e3e42] shadow-sm text-left"
+        className="w-full max-w-md p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-white dark:bg-[#252526] border border-slate-200 dark:border-[#3e3e42] shadow-sm text-left mx-4 sm:mx-0"
       >
         <div className="mb-6">
           <div className="inline-flex items-center gap-2.5 bg-slate-100 dark:bg-[#2d2d30] px-4 py-2 rounded-full border border-slate-200 dark:border-[#3e3e42]">
@@ -108,7 +108,7 @@ function Login() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-2">
+        <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mb-2">
           Employee Management Login
         </h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">

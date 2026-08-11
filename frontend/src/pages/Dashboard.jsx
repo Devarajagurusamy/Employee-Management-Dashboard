@@ -255,15 +255,15 @@ function Dashboard() {
   };
 
   return (
-    <div className="w-full max-w-[1400px] mx-auto py-2 px-1">
+    <div className="w-full max-w-[1400px] mx-auto py-2 px-2 sm:px-4">
       {/* Top Navbar */}
       <TopNavbar activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Main Shell Container */}
-      <div className="bg-white dark:bg-[#252526] rounded-3xl border border-slate-200 dark:border-[#3e3e42] p-6 sm:p-8 shadow-sm text-left transition-colors duration-200">
+      <div className="bg-white dark:bg-[#252526] rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-[#3e3e42] p-4 sm:p-6 md:p-8 shadow-sm text-left transition-colors duration-200">
         {/* Welcome Header */}
         <header data-aos="fade-down" className="mb-6 pb-4 border-b border-slate-200 dark:border-[#3e3e42]">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight m-0">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight m-0">
             Welcome back, {user?.name || 'Administrator'}
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -292,7 +292,7 @@ function Dashboard() {
                 />
 
                 {/* Charts Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                   <MonthlyJoinedChart data={analytics?.monthlyJoinedEmployees || []} />
                   <DepartmentChart data={analytics?.departmentWiseCount || []} />
                   <StatusDistributionChart data={analytics?.statusDistribution || []} />
@@ -307,7 +307,7 @@ function Dashboard() {
           <section className="mt-6">
             <div className="flex justify-between items-center mb-4">
               <div>
-                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white m-0">
+                <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white m-0">
                   Employee Records
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">

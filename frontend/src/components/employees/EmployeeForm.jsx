@@ -101,11 +101,11 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/65 backdrop-blur-sm flex justify-center items-center z-[1000] p-4">
+    <div className="fixed inset-0 bg-slate-900/65 backdrop-blur-sm flex justify-center items-end sm:items-center z-[1000] p-0 sm:p-4">
       <div
         data-aos="zoom-in"
         data-aos-duration="300"
-        className="bg-white dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42] w-full max-w-lg p-7 shadow-2xl text-left"
+        className="bg-white dark:bg-[#2d2d30] rounded-t-2xl sm:rounded-2xl border border-slate-200 dark:border-[#3e3e42] w-full max-w-lg p-5 sm:p-7 shadow-2xl text-left max-h-[90vh] overflow-y-auto"
       >
         <div className="flex justify-between items-center pb-3 mb-5 border-b border-slate-200 dark:border-[#3e3e42]">
           <h3 className="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2 m-0">
@@ -138,7 +138,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
           <div className="flex flex-wrap gap-4">
-            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+            <div className="flex-1 min-w-0 sm:min-w-[200px] flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
                 Full Name *
               </label>
@@ -156,7 +156,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
               {errors.name && <span className="text-xs text-rose-500">{errors.name}</span>}
             </div>
 
-            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+            <div className="flex-1 min-w-0 sm:min-w-[200px] flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
                 Email Address *
               </label>
@@ -176,7 +176,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+            <div className="flex-1 min-w-0 sm:min-w-[200px] flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
                 Department *
               </label>
@@ -194,7 +194,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
               {errors.department && <span className="text-xs text-rose-500">{errors.department}</span>}
             </div>
 
-            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+            <div className="flex-1 min-w-0 sm:min-w-[200px] flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
                 Designation *
               </label>
@@ -214,7 +214,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+            <div className="flex-1 min-w-0 sm:min-w-[200px] flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
                 Status *
               </label>
@@ -233,7 +233,7 @@ function EmployeeForm({ isOpen, onClose, onSubmit, initialData, isSubmitting, ap
               {errors.status && <span className="text-xs text-rose-500">{errors.status}</span>}
             </div>
 
-            <div className="flex-1 min-w-[200px] flex flex-col gap-1.5">
+            <div className="flex-1 min-w-0 sm:min-w-[200px] flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
                 Joining Date *
               </label>

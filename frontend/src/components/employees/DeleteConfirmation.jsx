@@ -5,11 +5,11 @@ function DeleteConfirmation({ isOpen, onClose, onConfirm, employeeName, isDeleti
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-slate-900/65 backdrop-blur-sm flex justify-center items-center z-[1000] p-4">
+    <div className="fixed inset-0 bg-slate-900/65 backdrop-blur-sm flex justify-center items-end sm:items-center z-[1000] p-0 sm:p-4">
       <div
         data-aos="zoom-in"
         data-aos-duration="300"
-        className="bg-white dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42] w-full max-w-md p-7 shadow-2xl text-left"
+        className="bg-white dark:bg-[#2d2d30] rounded-t-2xl sm:rounded-2xl border border-slate-200 dark:border-[#3e3e42] w-full max-w-md p-5 sm:p-7 shadow-2xl text-left"
       >
         <div className="flex items-center gap-3 mb-3 text-rose-600 dark:text-rose-400">
           <AlertTriangle className="w-6 h-6 flex-shrink-0" />
@@ -24,7 +24,7 @@ function DeleteConfirmation({ isOpen, onClose, onConfirm, employeeName, isDeleti
           This action will permanently remove the employee record from MongoDB.
         </p>
 
-        <div className="flex justify-end gap-3">
+        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3">
           <button
             type="button"
             onClick={onClose}

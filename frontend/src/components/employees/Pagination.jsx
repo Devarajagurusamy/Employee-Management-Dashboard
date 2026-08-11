@@ -37,7 +37,7 @@ function Pagination({
   return (
     <div
       data-aos="fade-up"
-      className="flex flex-wrap justify-between items-center mt-5 px-5 py-3.5 bg-white dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42] shadow-sm gap-4"
+      className="flex flex-col sm:flex-row flex-wrap justify-between items-center mt-4 sm:mt-5 px-4 sm:px-5 py-3 sm:py-3.5 bg-white dark:bg-[#2d2d30] rounded-2xl border border-slate-200 dark:border-[#3e3e42] shadow-sm gap-3 sm:gap-4"
     >
       {/* Pagination Info */}
       <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
@@ -57,7 +57,7 @@ function Pagination({
           type="button"
         >
           <ChevronLeft className="w-4 h-4" />
-          <span>Previous</span>
+          <span className="hidden sm:inline">Previous</span>
         </button>
 
         {/* First Page Link if offset */}
@@ -118,7 +118,7 @@ function Pagination({
           aria-label="Next page"
           type="button"
         >
-          <span>Next</span>
+          <span className="hidden sm:inline">Next</span>
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>
