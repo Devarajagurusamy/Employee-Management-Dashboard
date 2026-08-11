@@ -7,6 +7,10 @@ const {
   updateEmployee,
   deleteEmployee,
 } = require('../controllers/employeeController');
+const { protect } = require('../middleware/authMiddleware');
+
+// All employee routes are protected by JWT authentication
+router.use(protect);
 
 router.route('/').get(getEmployees).post(createEmployee);
 router
