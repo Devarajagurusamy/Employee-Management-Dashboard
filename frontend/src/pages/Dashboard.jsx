@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import * as employeeService from '../services/employeeService';
 import EmployeeTable from '../components/employees/EmployeeTable';
 import EmployeeForm from '../components/employees/EmployeeForm';
 import DeleteConfirmation from '../components/employees/DeleteConfirmation';
+import EmployeeFilters from '../components/employees/EmployeeFilters';
 
 function Dashboard() {
   const { user, logout } = useAuth();
@@ -11,6 +12,11 @@ function Dashboard() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Search & Filter States
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('All');
+  const [selectedStatus, setSelectedStatus] = useState('All');
 
   // Modal & Form States
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -45,6 +51,50 @@ function Dashboard() {
   useEffect(() => {
     fetchEmployeeList();
   }, []);
+
+  // Derive unique available departments from current employee dataset or standard defaults
+  const availableDepartments = useMemo(() => {
+    const defaultDepts = ['Engineering', 'HR', 'Finance', 'Marketing', 'Sales', 'Operations'];
+    const empDepts = employees
+      .map((e) => e.department)
+      .filter((dept) => dept && typeof dept === 'string' && dept.trim() !== '');
+
+    const combined = Array.from(new Set([...defaultDepts, ...empDepts]));
+    return combined.sort();
+  }, [employees]);
+
+  // Derived filtered employees list
+  const filteredEmployees = useMemo(() => {
+    return employees.filter((emp) => {
+      // 1. Search term match (name or email, case-insensitive)
+      const term = searchTerm.trim().toLowerCase();
+      const matchesSearch =
+        !term ||
+        (emp.name && emp.name.toLowerCase().includes(term)) ||
+        (emp.email && emp.email.toLowerCase().includes(term));
+
+      // 2. Department match
+      const matchesDept =
+        selectedDepartment === 'All' || emp.department === selectedDepartment;
+
+      // 3. Status match
+      const matchesStatus =
+        selectedStatus === 'All' || emp.status === selectedStatus;
+
+      return matchesSearch && matchesDept && matchesStatus;
+    });
+  }, [employees, searchTerm, selectedDepartment, selectedStatus]);
+
+  const hasActiveFilters =
+    searchTerm.trim() !== '' ||
+    selectedDepartment !== 'All' ||
+    selectedStatus !== 'All';
+
+  const handleClearFilters = () => {
+    setSearchTerm('');
+    setSelectedDepartment('All');
+    setSelectedStatus('All');
+  };
 
   // Form Handlers
   const handleAddEmployee = () => {
@@ -164,7 +214,7 @@ function Dashboard() {
         <div>
           <h3 style={styles.sectionTitle}>Employee Records</h3>
           <p style={styles.sectionSubtitle}>
-            Manage team members and view employee details
+            Manage team members, search, filter, and view employee details
           </p>
         </div>
         <button onClick={handleAddEmployee} style={styles.addBtn}>
@@ -172,15 +222,30 @@ function Dashboard() {
         </button>
       </div>
 
+      {/* Search & Filter Controls Component */}
+      <EmployeeFilters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        selectedDepartment={selectedDepartment}
+        onDepartmentChange={setSelectedDepartment}
+        selectedStatus={selectedStatus}
+        onStatusChange={setSelectedStatus}
+        departments={availableDepartments}
+        onClearFilters={handleClearFilters}
+        hasActiveFilters={hasActiveFilters}
+      />
+
       {/* Main Table Component */}
       <main>
         <EmployeeTable
-          employees={employees}
+          employees={filteredEmployees}
           loading={loading}
           error={error}
           onEdit={handleEditEmployee}
           onDelete={handleDeleteEmployee}
           onRetry={fetchEmployeeList}
+          isFiltered={hasActiveFilters}
+          onClearFilters={handleClearFilters}
         />
       </main>
 

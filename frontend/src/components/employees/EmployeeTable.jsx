@@ -1,6 +1,15 @@
 import React from 'react';
 
-function EmployeeTable({ employees, loading, error, onEdit, onDelete, onRetry }) {
+function EmployeeTable({
+  employees,
+  loading,
+  error,
+  onEdit,
+  onDelete,
+  onRetry,
+  isFiltered,
+  onClearFilters,
+}) {
   if (loading) {
     return (
       <div style={styles.stateContainer}>
@@ -23,6 +32,22 @@ function EmployeeTable({ employees, loading, error, onEdit, onDelete, onRetry })
   }
 
   if (!employees || employees.length === 0) {
+    if (isFiltered) {
+      return (
+        <div style={styles.stateContainer}>
+          <p style={styles.emptyText}>No employees match your search or filters.</p>
+          <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+            Try adjusting your search keywords or clearing active filters.
+          </p>
+          {onClearFilters && (
+            <button onClick={onClearFilters} style={styles.clearFiltersBtn}>
+              Clear Filters
+            </button>
+          )}
+        </div>
+      );
+    }
+
     return (
       <div style={styles.stateContainer}>
         <p style={styles.emptyText}>No employees found.</p>
@@ -205,6 +230,15 @@ const styles = {
     border: '1px solid #555',
     borderRadius: '4px',
     cursor: 'pointer',
+  },
+  clearFiltersBtn: {
+    padding: '0.5rem 1.25rem',
+    backgroundColor: '#333',
+    color: '#ff6b6b',
+    border: '1px solid #ff6b6b',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontWeight: '600',
   },
 };
 
